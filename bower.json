@@ -1,0 +1,18 @@
+{
+  "name": "cards-app",
+  "description": "Cards Against Humanity App written in Polymer",
+  "main": "index.js",
+  "authors": [
+    "FrozenPandaz <jasonjean1993@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/FrozenPandaz/cards-app",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
