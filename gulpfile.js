@@ -1,15 +1,13 @@
 var gulp = require('gulp'),
-	connect = require('gulp-connect');
-
-gulp.task('connect', function() {
-	connect.server({
-		root:'app',
-		livereload: true
-	});
+	webserver = require('gulp-webserver');
+ 
+gulp.task('webserver', function() {
+  gulp.src('app')
+    .pipe(webserver({
+      livereload: true,
+      directoryListing: false,
+      open: true
+    }));
 });
 
-gulp.task('watch', function() {
-	gulp.watch(['app/']);
-});
-
-gulp.task('default', ['connect', 'watch']);
+gulp.task('default', ['webserver']);
