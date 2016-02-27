@@ -1,0 +1,304 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app/index.html",
+			"settings":
+			{
+				"buffer_size": 286,
+				"line_ending": "Windows",
+				"name": "app/index.html"
+			}
+		},
+		{
+			"file": "app/elements/main-app.html",
+			"settings":
+			{
+				"buffer_size": 608,
+				"line_ending": "Windows",
+				"name": "main-app.html"
+			}
+		},
+		{
+			"file": "app/elements/elements.html",
+			"settings":
+			{
+				"buffer_size": 444,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/Jason/projects/personal/cards-app",
+		"/C/Users/Jason/projects/personal/cards-app/app",
+		"/C/Users/Jason/projects/personal/cards-app/app/bower_components",
+		"/C/Users/Jason/projects/personal/cards-app/app/bower_components/paper-header-panel",
+		"/C/Users/Jason/projects/personal/cards-app/app/elements"
+	],
+	"file_history":
+	[
+		"/C/Users/Jason/projects/personal/cards-app/app/elements/elements.html",
+		"/C/Users/Jason/projects/personal/cards-app/.gitignore",
+		"/C/Users/Jason/projects/personal/cards-app/gulpfile.js",
+		"/C/Users/Jason/projects/personal/cards-app/package.json",
+		"/C/Users/Jason/projects/personal/cards-app/.bowerrc",
+		"/C/Users/Jason/projects/personal/cards-app/bower.json",
+		"/C/Users/Jason/projects/personal/cards-app/app/bower_components/firebase-element/firebase-collection.html",
+		"/C/Users/Jason/projects/personal/cards-app/app/bower_components/polymer/polymer.html",
+		"/C/Users/Jason/projects/personal/cards-app/app/gulpfile.js",
+		"/C/Users/Jason/projects/personal/cards-app/app/index.html",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/test/protractor-spec/csf/pagecheck.spec.js",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/test/protractor-spec/csf/csf.page.js",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/test/protractor-spec/contrib/contribhp.page.js",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/test/protractor-spec/contrib/pagecheck.spec.js",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/test/protractor-spec/article/pagecheck.spec.js",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/protractor.conf.js",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/test/protractor-spec/article/article.page.js",
+		"/C/Users/Jason/Dropbox/Forbes/Templates/protractor/test/protractor-spec/global.spec.js"
+	],
+	"find":
+	{
+		"height": 36.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"type"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 286,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								123,
+								123
+							]
+						],
+						"settings":
+						{
+							"auto_name": "app/index.html",
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/elements/main-app.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 608,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								431,
+								431
+							]
+						],
+						"settings":
+						{
+							"auto_name": "main-app.html",
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/elements/elements.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 444,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								353,
+								353
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 36.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "Sublime Project.sublime-project",
+	"replace":
+	{
+		"height": 68.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 277.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
