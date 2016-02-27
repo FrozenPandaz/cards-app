@@ -1,7 +1,7 @@
 <dom-module id="main-app">
 	<template>
 		<style>
-			div.drawer {
+			.drawer {
 				background: beige;
 			}
 		</style>
@@ -9,16 +9,20 @@
 			<firebase-document
 				location="https://card-app.firebaseio.com/count"
 				data="{{count}}">
-			<paper-header-panel waterfall>
-				<paper-toolbar>
-		  			<paper-icon-button icon="menu"></paper-icon-button>
-		  			<h1>Play Cards Against Humanities</h1>
-	  			</paper-toolbar>
-				<paper-drawer-panel>
-					<div drawer class="drawer"></div>
-					<div main class="main"></div>
-				</paper-drawer-panel>
-			</paper-header-panel>
+			<paper-drawer-panel>
+				<paper-header-panel drawer class="drawer">
+					<paper-toolbar>
+			  			<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+		  			</paper-toolbar>
+		  			<app-drawer></app-drawer>
+				</paper-header-panel>
+				<paper-header-panel main>
+					<paper-toolbar>
+			  			<h1>Play Cards Against Humanities</h1>
+					</paper-toolbar>
+					<app-content></app-content>
+				</paper-header-panel>
+			</paper-drawer-panel>
 			
 		</template>
 	</template>
