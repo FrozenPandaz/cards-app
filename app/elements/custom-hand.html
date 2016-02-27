@@ -1,0 +1,31 @@
+<dom-module is="custom-hand">
+	<template>
+		<template is="dom-bind">
+			<firebase-collection
+				location="https://card-app.firebaseio.com/game_0/user_0/cards/"
+				data="{{cards}}"
+			></firebase-collection>
+			<div>
+				<template is="dom-repeat" items="{{cards}}" as="card">
+					<custom-card card-text="{{card.value}}"></custom-card>
+				</template>
+			</div>
+		</template>
+	</template>
+	<script>
+		Hand = Polymer({
+			is:"custom-hand",
+			properties: {
+				game: {
+					type:String
+				},
+				user: {
+					type:String
+				}
+			},
+			ready: function () {
+				console.log(this.game,this.user);
+			}
+		});
+	</script>
+</dom-module>

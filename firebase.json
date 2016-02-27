@@ -1,0 +1,9 @@
+{
+  "firebase": "card-app",
+  "public": "app",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

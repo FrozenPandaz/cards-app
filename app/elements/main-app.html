@@ -4,7 +4,7 @@
 			.drawer {
 				background: beige;
 			}
-			.hand {
+			custom-hand {
 				position: absolute;
 				bottom: 0px;
 				background-color: grey;
@@ -16,7 +16,8 @@
 		<template is="dom-bind">
 			<firebase-document
 				location="https://card-app.firebaseio.com/count"
-				data="{{count}}">
+				data="{{count}}"
+				query="{{firebase_query}}"></firebase-document>
 			<paper-drawer-panel>
 				<paper-header-panel drawer class="drawer">
 					<paper-toolbar>
@@ -26,29 +27,17 @@
 				</paper-header-panel>
 				<paper-header-panel main>
 					<paper-toolbar>
-			  			<h1>Play Cards Against Humanities</h1>
+			  			<h1>Play Cards Against Humanity</h1>
 					</paper-toolbar>
 					<app-content></app-content>
 				</paper-header-panel>
 			</paper-drawer-panel>
-			<div class="hand">
-				<custom-card card-text="This is the text."></custom-card>
-				<custom-card card-text="This is the text."></custom-card>
-				<custom-card card-text="This is the text."></custom-card>
-				<custom-card card-text="This is the text."></custom-card>
-			</div>
-			
+			<custom-hand game="game_0" user="user_0"></custom-hand>
 		</template>
 	</template>
 	<script>
 		MainApp = Polymer({
-			is: 'main-app',
-			listeners: {
-				tap: 'toggleDrawer'
-			},
-			toggleDrawer: function() {
-				console.log('Toggle');
-			}
+			is: 'main-app'
 		});
 	</script>
 </dom-module>
