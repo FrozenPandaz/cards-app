@@ -4,6 +4,14 @@
 			.drawer {
 				background: beige;
 			}
+			.hand {
+				position: absolute;
+				bottom: 0px;
+				background-color: grey;
+				width: 100%;
+				height: 180px;
+			}
+
 		</style>
 		<template is="dom-bind">
 			<firebase-document
@@ -23,6 +31,12 @@
 					<app-content></app-content>
 				</paper-header-panel>
 			</paper-drawer-panel>
+			<div class="hand">
+				<custom-card card-text="This is the text."></custom-card>
+				<custom-card card-text="This is the text."></custom-card>
+				<custom-card card-text="This is the text."></custom-card>
+				<custom-card card-text="This is the text."></custom-card>
+			</div>
 			
 		</template>
 	</template>
