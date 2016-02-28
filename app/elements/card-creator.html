@@ -29,12 +29,12 @@
 			height: 30%;
 		}
 		custom-card ::content paper-card {
-			width: 80%;
-			height: 80%;
+			width: 240px;
+			height: 240px;
 		}
 		custom-card ::content paper-card:hover {
-			width: 100%;
-			height: 100%;
+			width: 260px;
+			height: 260px;
 		}
 
 		custom-card.true ::content paper-card {
@@ -55,8 +55,11 @@
 			<span>
 				<h1>Submit your own Cards</h1>
 				<iron-form id="form">
-					<paper-toggle-button id="black" name="black" aria-active-attribute="black" active="{{black}}"></paper-toggle-button>
-					<paper-input name="text" type="text" label="Card" value="{{cardText::input}}"></paper-input>
+					<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
+					<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card" value="{{cardText::input}}"></paper-input>
+					<!-- <template is="dom-if" if="{{black}}">
+						<paper-input class="number" type="number" label="# of Fields" value={{response::input}}></paper-input>
+					</template> -->
 					<paper-button raised type="submit" on-tap="submitForm">Submit</paper-button>
 				</iron-form>
 				<custom-card class$="{{black}}"card-text=[[cardText]]>
@@ -72,14 +75,42 @@
 				black: {
 					type: Boolean,
 					notify: true
+				}, pattern: {
+					type: String,
+					computed: 'getPattern(black)',
+					readOnly: true
+				}, error: {
+					type: String,
+					computed: 'getError(black)',
+					readOnly: true
 				}
 			},
 			submitForm: function() {
 				var type = this.black ? 'black' : 'white',
 					firebase = this.$.firebase,
-					count = firebase.data[type].count;
+					count = firebase.data[type].count,
+					card = this.black ? {
+						text: this.cardText,
+						response_count: this.cardText.split(/_/).length - 1,
+						stats: {
+							play_count: 0
+						}
+					} : {
+						text: this.cardText,
+						stats: {
+							draw_count: 0,
+							play_count: 0,
+							win_count: 0
+						}
+					} ;
 				firebase.query.child(type).child('count').set(count+1);
-				firebase.query.child(type).child('card_'+(count+1)).set(this.cardText);
+				firebase.query.child(type).child('card_'+(count+1)).set(card);
+			},
+			getPattern: function(black) {
+				return black ? '[^_]*_[^_]*' : '^((?!_).)*$';
+			},
+			getError: function(black) {
+				return black ? 'Black Cards must contain a "_"' : 'White Cards must not contain a "_"';
 			}
 		})
 	</script>

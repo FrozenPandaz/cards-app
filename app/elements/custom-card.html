@@ -23,7 +23,7 @@
 		}
 	</style>
 	<template>
-		<paper-card><paper-button id="text">[[cardText]]</paper-button></paper-card>
+		<paper-card><paper-button id="text">[[parsedText]]</paper-button></paper-card>
 	</template>
 	<script>
 		CustomCard = Polymer({
@@ -31,9 +31,17 @@
 			properties: {
 				cardText: {
 					type: String,
-					value: "This is text",
+					value: "This is the Text",
+					notify: true
+				},
+				parsedText: {
+					type: String,
+					computed: 'parseText(cardText)',
 					notify: true
 				}
+			},
+			parseText: function(cardText) {
+				return cardText.replace(/_/g,'________');
 			}
 		});
 	</script>
