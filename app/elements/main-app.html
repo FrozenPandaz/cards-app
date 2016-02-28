@@ -1,8 +1,5 @@
 <dom-module id="main-app">
 	<style>
-		.drawer {
-			background: beige;
-		}
 		custom-hand {
 			position: absolute;
 			bottom: 0px;
@@ -11,35 +8,42 @@
 			height: 180px;
 		}
 		paper-input {
-			color: white;
+			--paper-input-container-color: grey;
+			--paper-input-container-input-color: white;
+			position: absolute;
+			right: 20px;
+			width: 20em;
+		}
+		a {
+			text-decoration: none;
+		}
+		a:visited {
+			text-decoration: none;
+			color: inherit;
 		}
 
 	</style>
 	<template>
 		<link rel="import" href="router.html" />
-		<paper-drawer-panel>
-			<paper-header-panel drawer class="drawer">
-				<paper-toolbar>
-		  			<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
-	  			</paper-toolbar>
-	  			<app-drawer></app-drawer>
-			</paper-header-panel>
-			<paper-header-panel main>
-				<paper-toolbar>
-		  			<h1>Play Cards Against Humanity</h1>
-		  			<paper-input label="Game" type="text"></paper-input>
-				</paper-toolbar>
-				<more-route-selector>
-					<iron-pages attr-for-selected="route">
+		<paper-header-panel>
+			<paper-toolbar>
+	  			<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+	  			<h1><a href="#!/">Play Cards Against Humanity</a></h1>
+	  			<paper-input label="Game" type="text" readonly value$="{{getUrl()}}"></paper-input>
+  			</paper-toolbar>
+			<paper-drawer-panel>
+  				<app-drawer drawer></app-drawer>
+				<more-route-selector id="route" main>
+					<iron-pages>
 						<home-page route="home"></home-page>
-						<app-content route="game"></app-content>
+						<app-content route="game" game$="{{gameId}}"></app-content>
 					</iron-pages>
 				</more-route-selector>
-			</paper-header-panel>
-		</paper-drawer-panel>
+			</paper-drawer-panel>
+		</paper-header-panel>
 		<more-route-selector>
-			<iron-pages attr-for-selected="route">
-				<custom-hand route="game" game="game_0" user="user_0"></custom-hand>
+			<iron-pages>
+				<custom-hand route="game" game$="{{gameId}}" user="user_0"></custom-hand>
 			</iron-pages>
 		</more-route-selector>
 	</template>
@@ -47,10 +51,18 @@
 		MainApp = Polymer({
 			is: 'main-app',
 			properties: {
-				route: {
-					type: String,
-					value: "home"
-				}
+				gameId: String,
+				notify: true
+			},
+			attached: function() {
+				var _this = this;
+				
+				setInterval(function() {
+					_this.gameId = _this.$.route.$.selection.selectedParams.gameId;
+				});
+			},
+			getUrl: function() {
+				return window.location.toString();
 			}
 		});
 	</script>

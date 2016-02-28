@@ -14,11 +14,31 @@
 		}
 	</style>
 	<template>
+		<firebase-document
+			id="firebase"
+			location$="{{getUrl(game)}}"
+			data="{{data}}"></firebase-document>
+		
+		<h1>{{data.users}} in {{data.name}}!</h1>
 		<custom-card class="black" card-text="This is text."></custom-card>
 	</template>
 	<script>
 		AppContent = Polymer({
-			is: "app-content"
+			is: "app-content",
+			properties: {
+				game: {
+					type: String,
+					notify: true
+				},
+				url: {
+					type: String,
+					computed: 'getUrl(game)',
+					notify: true
+				}
+			},
+			getUrl: function(game) {
+				return "https://card-app.firebaseio.com/" + game;
+			}
 		});
 	</script>
 </dom-module>

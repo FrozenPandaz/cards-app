@@ -20,33 +20,33 @@
 			margin-left: 50%;
 			transform: translate(-50%, 0%);
 		}
+		a {
+			text-decoration: none;
+			color: inherit;
+		}
 	</style>
 	<template>
-		<!-- <template is="dom-bind"> -->
-			<firebase-document
-				id="firebase"
-				location="https://card-app.firebaseio.com/"
-				data="{{data}}"
-				dataAsObject></firebase-document>
-			<paper-card>
-				<header>Please enter a Game Name</header>
-				<paper-input type="text" label="Game Name" value={{gameName::input}}></paper-input>
-				<a href="/#!/{{gameId}}/">
-					<paper-button type="submit" on-tap="newGame">Start Game{{data.count}}</paper-button>
-				</a>
-			</paper-card>
-		<!-- </template> -->
+		<firebase-document
+			id="firebase"
+			location="https://card-app.firebaseio.com/"
+			data="{{data}}"></firebase-document>
+		<paper-card>
+			<header>Please enter a Game Name</header>
+			<paper-input type="text" label="Game Name" value={{gameName::input}}></paper-input>
+			<a href="/#!/{{gameId}}/">
+				<paper-button type="submit" on-tap="newGame">Start Game</paper-button>
+			</a>
+		</paper-card>
 	</template>
 	<script>
 		HomePage = Polymer({
 			is:'home-page',
-			behaviors: [Polymer.FirebaseQueryBehavior],
 			ready: function() {
 				this.firebase = this.$.firebase;
 			},
 			newGame: function() {
 				this.gameId = 'game_' + this.firebase.data.count;
-				this.firebase.query.child(this.gameId).set({users:0, name:this.gameName});
+				this.firebase.query.child(this.gameId).set({users:0, name:this.gameName || null});
 				this.firebase.query.child('count').set(this.firebase.data.count + 1);
 			}
 		});
