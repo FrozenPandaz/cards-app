@@ -1,30 +1,36 @@
 <dom-module is="custom-hand">
 	<template>
-		<template is="dom-bind">
-			<firebase-collection
-				location="https://card-app.firebaseio.com/game_0/user_0/cards/"
-				data="{{cards}}"
-			></firebase-collection>
-			<div>
-				<template is="dom-repeat" items="{{cards}}" as="card">
-					<custom-card card-text="{{card.value}}"></custom-card>
-				</template>
-			</div>
-		</template>
+		<firebase-collection
+			id="firebase"
+			location$="{{url}}"
+			data="{{cards}}"
+		></firebase-collection>
+		<div>
+			<template is="dom-repeat" items="{{cards}}" as="card">
+				<custom-card card-text="{{card.value}}"></custom-card>
+			</template>
+		</div>
 	</template>
 	<script>
 		Hand = Polymer({
 			is:"custom-hand",
 			properties: {
 				game: {
-					type:String
+					type:String,
+					notify: true
 				},
 				user: {
-					type:String
+					type:String,
+					notify: true
+				},
+				url: {
+					type: String,
+					computed: 'getUrl(game,user)',
+					notify: true
 				}
 			},
-			ready: function () {
-				console.log(this.game,this.user);
+			getUrl: function(game, user) {
+				return "https://card-app.firebaseio.com/" + game + "/" + user + "/cards/";
 			}
 		});
 	</script>

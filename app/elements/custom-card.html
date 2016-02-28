@@ -23,7 +23,7 @@
 		}
 	</style>
 	<template>
-		<paper-card><paper-button id="text">{{cardText}}</paper-button></paper-card>
+		<paper-card><paper-button id="text">[[cardText]]</paper-button></paper-card>
 	</template>
 	<script>
 		CustomCard = Polymer({
@@ -34,10 +34,6 @@
 					value: "This is text",
 					notify: true
 				}
-			},
-			ready: function() {
-				console.log(this.cardText);
-				this.$$('#text').textContent = this.cardText;
 			}
 		});
 	</script>

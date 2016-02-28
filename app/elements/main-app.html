@@ -1,43 +1,57 @@
 <dom-module id="main-app">
-	<template>
-		<style>
-			.drawer {
-				background: beige;
-			}
-			custom-hand {
-				position: absolute;
-				bottom: 0px;
-				background-color: grey;
-				width: 100%;
-				height: 180px;
-			}
+	<style>
+		.drawer {
+			background: beige;
+		}
+		custom-hand {
+			position: absolute;
+			bottom: 0px;
+			background-color: grey;
+			width: 100%;
+			height: 180px;
+		}
+		paper-input {
+			color: white;
+		}
 
-		</style>
-		<template is="dom-bind">
-			<firebase-document
-				location="https://card-app.firebaseio.com/count"
-				data="{{count}}"
-				query="{{firebase_query}}"></firebase-document>
-			<paper-drawer-panel>
-				<paper-header-panel drawer class="drawer">
-					<paper-toolbar>
-			  			<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
-		  			</paper-toolbar>
-		  			<app-drawer></app-drawer>
-				</paper-header-panel>
-				<paper-header-panel main>
-					<paper-toolbar>
-			  			<h1>Play Cards Against Humanity</h1>
-					</paper-toolbar>
-					<app-content></app-content>
-				</paper-header-panel>
-			</paper-drawer-panel>
-			<custom-hand game="game_0" user="user_0"></custom-hand>
-		</template>
+	</style>
+	<template>
+		<link rel="import" href="router.html" />
+		<paper-drawer-panel>
+			<paper-header-panel drawer class="drawer">
+				<paper-toolbar>
+		  			<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+	  			</paper-toolbar>
+	  			<app-drawer></app-drawer>
+			</paper-header-panel>
+			<paper-header-panel main>
+				<paper-toolbar>
+		  			<h1>Play Cards Against Humanity</h1>
+		  			<paper-input label="Game" type="text"></paper-input>
+				</paper-toolbar>
+				<more-route-selector>
+					<iron-pages attr-for-selected="route">
+						<home-page route="home"></home-page>
+						<app-content route="game"></app-content>
+					</iron-pages>
+				</more-route-selector>
+			</paper-header-panel>
+		</paper-drawer-panel>
+		<more-route-selector>
+			<iron-pages attr-for-selected="route">
+				<custom-hand route="game" game="game_0" user="user_0"></custom-hand>
+			</iron-pages>
+		</more-route-selector>
 	</template>
 	<script>
 		MainApp = Polymer({
-			is: 'main-app'
+			is: 'main-app',
+			properties: {
+				route: {
+					type: String,
+					value: "home"
+				}
+			}
 		});
 	</script>
 </dom-module>
