@@ -45,7 +45,7 @@
 				this.firebase = this.$.firebase;
 			},
 			newGame: function() {
-				this.gameId = 'game_' + this.firebase.data.count;
+				this.gameId = this.gameName ? this.gameName.replace(' ', '-') : 'game-' + this.firebase.data.count;
 				this.firebase.query.child(this.gameId).set({users:0, name:this.gameName || null});
 				this.firebase.query.child('count').set(this.firebase.data.count + 1);
 			}
