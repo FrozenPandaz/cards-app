@@ -3,3 +3,6 @@ node_modules/
 
 #Bower Components
 bower_components/
+
+#Sublime Stuff
+**.sublime**
