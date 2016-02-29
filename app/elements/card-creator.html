@@ -7,11 +7,13 @@
 			padding: 20px;
 			elevation: 2;
 			display: block;
+			min-width: 580px;
 		}
 		paper-toggle-button {
 			float:right;
+			margin-bottom: 10px;
 		}
-		iron-form {
+		form {
 			position: relative;
 			float: left;
 			display: block;
@@ -23,8 +25,8 @@
 		}
 		custom-card {
 			display: inline-block;
-			float: right;
-			margin: 0px 20px 20px 0px;
+			float: left;
+			margin-left: 20px;
 			width: 30%;
 			height: 30%;
 		}
@@ -54,14 +56,11 @@
 		<paper-material>
 			<span>
 				<h1>Submit your own Cards</h1>
-				<iron-form id="form">
+				<form is="iron-form" id="form" action="/" target="_self">
 					<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
 					<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card" value="{{cardText::input}}"></paper-input>
-					<!-- <template is="dom-if" if="{{black}}">
-						<paper-input class="number" type="number" label="# of Fields" value={{response::input}}></paper-input>
-					</template> -->
-					<paper-button raised type="submit" on-tap="submitForm">Submit</paper-button>
-				</iron-form>
+					<paper-button raised type="submit">Submit</paper-button>
+				</form>
 				<custom-card class$="{{black}}"card-text=[[cardText]]>
 				</custom-card>
 			</span>
@@ -85,7 +84,15 @@
 					readOnly: true
 				}
 			},
+			ready: function() {
+				var form =this.$.form,
+					_this = this;
+				form.addEventListener('iron-form-submit', function() {
+					_this.submitForm();
+				});
+			},
 			submitForm: function() {
+				console.log('submit form');
 				var type = this.black ? 'black' : 'white',
 					firebase = this.$.firebase,
 					count = firebase.data[type].count,
@@ -107,10 +114,10 @@
 				firebase.query.child(type).child('card_'+(count+1)).set(card);
 			},
 			getPattern: function(black) {
-				return black ? '[^_]*_[^_]*' : '^((?!_).)*$';
+				return black ? '([^_]*_[^_]*){1,2}' : '^((?!_).)*$';
 			},
 			getError: function(black) {
-				return black ? 'Black Cards must contain a "_"' : 'White Cards must not contain a "_"';
+				return black ? 'Black Cards must contain 1 or 2 fields("_")' : 'White Cards must not contain any "_"';
 			}
 		})
 	</script>
