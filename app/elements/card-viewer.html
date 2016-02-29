@@ -1,0 +1,38 @@
+<dom-module is="card-viewer">
+	<style>
+
+		custom-card.true ::content paper-card {
+			background-color: black;
+			color: white;
+		}
+	</style>
+	<template>
+		<firebase-collection
+			id="firebase"
+			location="https://card-app.firebaseio.com/cards/{{type}}"
+			data="{{data}}"></firebase-collection>
+		<h1>Check out these cards!</h1>
+		<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
+		<template is="dom-repeat" items="{{data}}" filter=notCount>
+			<custom-card class$="{{black}}" card-text="{{item.text}}"></custom-card>
+		</template>
+	</template>
+	<script>
+		Polymer({
+			is: 'card-viewer',
+			properties: {
+				black: Boolean,
+				type: {
+					type:String,
+					computed: 'getType(black)'
+				}
+			},
+			getType(black) {
+				return black ? 'black' : 'white';
+			},
+			notCount(data) {
+				return data.__firebaseKey__ !== 'count';
+			}
+		})
+	</script>
+</dom-module>

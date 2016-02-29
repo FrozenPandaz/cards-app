@@ -38,6 +38,7 @@
 						<home-page route="home"></home-page>
 						<app-content route="game" game="{{gameId}}"></app-content>
 						<card-creator route="card-creator"></card-creator>
+						<card-viewer route="card-viewer"></card-viewer>
 					</iron-pages>
 				</more-route-selector>
 			</paper-drawer-panel>
@@ -56,11 +57,15 @@
 				}
 			},
 			attached: function() {
-				var _this = this;
+				var _this = this,
+					other_routes = [
+						'card-creator',
+						'card-viewer'
+					];
 				
 				setInterval(function() {
-					_this.gameId = _this.$.route.$.selection.selectedParams.gameId !== "card-creator" ? _this.$.route.$.selection.selectedParams.gameId : null;
-				});
+					_this.gameId = _this.$.route.$.selection.selectedParams && !other_routes.indexOf(_this.$.route.$.selection.selectedParams.gameId) ? _this.$.route.$.selection.selectedParams.gameId : null;
+				}, 10);
 			},
 			getUrl: function() {
 				return window.location.toString();
