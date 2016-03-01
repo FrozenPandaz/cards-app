@@ -64,7 +64,8 @@
 					];
 				
 				setInterval(function() {
-					_this.gameId = _this.$.route.$.selection.selectedParams && !other_routes.indexOf(_this.$.route.$.selection.selectedParams.gameId) ? _this.$.route.$.selection.selectedParams.gameId : null;
+					_this.gameId = _this.$.route.$.selection.selectedParams && other_routes.indexOf(_this.$.route.$.selection.selectedParams.gameId) < 0 ? _this.$.route.$.selection.selectedParams.gameId : null;
+					console.log(other_routes.indexOf(_this.$.route.$.selection.selectedParams.gameId));
 				}, 10);
 			},
 			getUrl: function() {
