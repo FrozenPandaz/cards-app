@@ -2,23 +2,28 @@
 	<style>
 		paper-card {
 			elevation: 1;
-			height: 50%;
-			width: 50%;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
+			height: 400px;
+			width: 600px;
+			margin-top: 100px;
+			@apply(--layout-horizontal);
+			@apply(--layout-center-justified);
+		}
+		:host {
+			@apply(--layout-horizontal);
+			@apply(--layout-center);
+			@apply(--layout-center-justified);
+		}
+		form {
+			@apply(--layout-vertical);
 		}
 		paper-input {
-			margin: auto;
 			elevation: 2;
-			width: 70%;
+			width: 13em;
 		}
 		paper-button {
 			background-color: red;
-			width: 10em;
-			margin-left: 50%;
-			transform: translate(-50%, 0%);
+			width: 9em;
+			align-self: center;
 		}
 		a {
 			text-decoration: none;
@@ -32,8 +37,7 @@
 			data="{{data}}"></firebase-document>
 		<paper-card>
 			<form is="iron-form" id="form">
-				<header>Please enter a Game Name</header>
-				<paper-input type="text" label="Game Name" value={{gameName::input}}></paper-input>
+				<paper-input type="text" label="Please enter a Game Name" value={{gameName::input}}></paper-input>
 				<paper-button raised type="submit" on-tap="newGame">Start Game</paper-button>
 			</form>
 		</paper-card>
@@ -41,6 +45,33 @@
 	<script>
 		HomePage = Polymer({
 			is:'home-page',
+			behaviors: [Polymer.NeonAnimationRunnerBehavior],
+			properties: {
+				animationConfig: {
+					value: function() {
+						return {
+							'entry': [{
+								name: 'slide-from-top-animation',
+								node: this.$$('paper-card'),
+								timing: {
+									duration: 1000,
+									delay: 500
+								}
+							}, {
+								name: 'scale-up-animation',
+								node: this.$$('paper-card'),
+								timing: {
+									duration: 500,
+									delay: 1000
+								}
+							}]
+						}
+					}
+				}
+			},
+			attached: function() {
+				this.playAnimation('entry');
+			},
 			ready: function() {
 				var _this = this;
 				this.$.form.addEventListener('iron-form-presubmit', function(e) {

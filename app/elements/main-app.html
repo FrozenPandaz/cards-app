@@ -27,6 +27,12 @@
 			color: inherit;
 		}
 
+		@media (max-width:600px) {
+			h1 {
+				font-size: .85em;
+			}
+		}
+
 	</style>
 	<template>
 		<link rel="import" href="router.html" />
@@ -55,10 +61,37 @@
 	<script>
 		MainApp = Polymer({
 			is: 'main-app',
+			behaviors: [Polymer.NeonAnimationRunnerBehavior],
 			properties: {
 				gameId: {
 					type: String,
 					notify: true
+				},
+				animationConfig: {
+					value: function() {
+						return {
+							'entry': [{
+								name: 'slide-from-top-animation',
+								node: this.$$('paper-toolbar'),
+								timing: {
+									duration: 1000
+								}
+							}, {
+								name: 'slide-from-left-animation',
+								node: this.$$('paper-drawer-panel').$.drawer,
+								timing: {
+									duration: 1000,
+									delay: 500
+								}
+							}, {
+								name: 'fade-in-animation',
+								node: this.$$('paper-header-panel'),
+								timing: {
+									duration: 1000
+								}
+							}]
+						}
+					}
 				}
 			},
 			attached: function() {
@@ -67,6 +100,8 @@
 						'card-creator',
 						'card-viewer'
 					];
+
+				this.playAnimation('entry');
 				
 				setInterval(function() {
 					_this.gameId = _this.$.route.$.selection.selectedParams && other_routes.indexOf(_this.$.route.$.selection.selectedParams.gameId) < 0 ? _this.$.route.$.selection.selectedParams.gameId : null;
