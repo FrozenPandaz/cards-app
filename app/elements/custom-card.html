@@ -28,6 +28,7 @@
 	<script>
 		CustomCard = Polymer({
 			is: 'custom-card',
+			behaviors: [Polymer.NeonAnimationRunnerBehavior],
 			properties: {
 				cardText: {
 					type: String,
@@ -38,7 +39,23 @@
 					type: String,
 					computed: 'parseText(cardText)',
 					notify: true
+				},
+				animationConfig: {
+					value: function() {
+						return {
+							'entry': {
+								name: 'slide-from-bottom-animation',
+								node: this,
+								timing: {
+									delay: 50
+								}
+							}
+						}
+					}
 				}
+			},
+			attached: function() {
+				this.playAnimation('entry');
 			},
 			parseText: function(cardText) {
 				return cardText.replace(/_/g,'________');

@@ -1,7 +1,7 @@
 <dom-module is="card-viewer">
 	<style>
 
-		custom-card.true ::content paper-card {
+		custom-card.black ::content paper-card {
 			background-color: black;
 			color: white;
 		}
@@ -14,7 +14,7 @@
 		<h1>Check out these cards!</h1>
 		<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
 		<template is="dom-repeat" items="{{data}}" filter=notCount>
-			<custom-card class$="{{black}}" card-text="{{item.text}}"></custom-card>
+			<custom-card class$="{{type}}" card-text="{{item.text}}"></custom-card>
 		</template>
 	</template>
 	<script>

@@ -20,6 +20,7 @@
     "iron-elements": "PolymerElements/iron-elements#^1.0.8",
     "paper-elements": "PolymerElements/paper-elements#^1.0.7",
     "firebase-element": "GoogleWebComponents/firebase-element#^1.0.12",
-    "more-routing": "PolymerLabs/more-routing#^1.0.0"
+    "more-routing": "PolymerLabs/more-routing#^1.0.0",
+    "neon-animation": "PolymerElements/neon-animation#^1.1.0"
   }
 }
