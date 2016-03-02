@@ -1,16 +1,10 @@
 <dom-module is="app-content">
 	<style>
-		.black {
+		custom-card {
 			position: relative;
 			float: right;
 			margin-right: 20px;
 			margin-top: 20px;
-		}
-
-		.black ::content paper-card {
-			background: black;
-			margin: 0px;
-			color: white;
 		}
 	</style>
 	<template>
@@ -20,7 +14,7 @@
 			data="{{data}}"></firebase-document>
 		
 		<h1>{{data.users}} in {{data.name}}!</h1>
-		<custom-card class="black" card-text="This is text."></custom-card>
+		<custom-card black card-text="This is text."></custom-card>
 	</template>
 	<script>
 		AppContent = Polymer({

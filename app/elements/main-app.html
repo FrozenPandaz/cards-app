@@ -19,13 +19,6 @@
 			right: 20px;
 			width: 20em;
 		}
-		a {
-			text-decoration: none;
-		}
-		a:visited {
-			text-decoration: none;
-			color: inherit;
-		}
 
 		@media (max-width:600px) {
 			h1 {
@@ -38,7 +31,7 @@
 		<link rel="import" href="router.html" />
 		<paper-header-panel>
 			<paper-toolbar>
-	  			<paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+	  			<paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
 	  			<h1><a href="#!/">Play Cards Against Humanity</a></h1>
 	  			<!-- <paper-input label="Game" type="text" readonly value$="{{getUrl()}}"></paper-input> -->
   			</paper-toolbar>
@@ -106,6 +99,9 @@
 				setInterval(function() {
 					_this.gameId = _this.$.route.$.selection.selectedParams && other_routes.indexOf(_this.$.route.$.selection.selectedParams.gameId) < 0 ? _this.$.route.$.selection.selectedParams.gameId : null;
 				}, 10);
+			},
+			toggleDrawer: function() {
+				this.$$('paper-drawer-panel').togglePanel();
 			},
 			getUrl: function() {
 				return window.location.toString();
