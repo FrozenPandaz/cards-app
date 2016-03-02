@@ -8,29 +8,67 @@
 	</style>
 	<template>
 		<firebase-collection
-			id="firebase"
-			location="https://card-app.firebaseio.com/cards/{{type}}"
-			data="{{data}}"></firebase-collection>
+			location="https://card-app.firebaseio.com/cards/white"
+			data="{{white-cards}}"></firebase-collection>
+		<firebase-collection
+			location="https://card-app.firebaseio.com/cards/black"
+			data="{{black-cards}}"></firebase-collection>
 		<h1>Check out these cards!</h1>
 		<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
-		<template is="dom-repeat" items="{{data}}" filter=notCount>
-			<custom-card class$="{{type}}" card-text="{{item.text}}"></custom-card>
-		</template>
+		<iron-pages selected="{{type}}" attr-for-selected="id">
+			<paper-material id="white">
+				<template is="dom-repeat" items="{{white-cards}}" filter=notCount>
+					<custom-card class="white" card-text="{{item.text}}"></custom-card>
+				</template>
+			</paper-material>
+
+			<paper-material id="black">
+				<template is="dom-repeat" class="black" items="{{black-cards}}" filter=notCount>
+					<custom-card class="black" card-text="{{item.text}}"></custom-card>
+				</template>
+			</paper-material>
+		</iron-pages>
 	</template>
 	<script>
 		Polymer({
 			is: 'card-viewer',
+			behaviors: [Polymer.NeonAnimationRunnerBehavior],
 			properties: {
 				black: Boolean,
 				type: {
 					type:String,
-					computed: 'getType(black)'
+					computed: 'getType(black)',
+					observer: 'animate'
+				},
+				animationConfig: {
+					value: function() {
+						return {
+							'black': {
+								name: 'fade-in-animation',
+								node: this.$.black,
+								timing: {
+									duration: 500
+								}
+							},
+							'white': {
+								name: 'fade-in-animation',
+								node: this.$.white,
+								timing: {
+									duration: 500
+								}
+							}
+						}
+					}
 				}
 			},
-			getType(black) {
+			animate: function(type) {
+				this.playAnimation(type);
+				this.$[type].style.display = 'inline-block';
+			},
+			getType: function(black) {
 				return black ? 'black' : 'white';
 			},
-			notCount(data) {
+			notCount: function(data) {
 				return data.__firebaseKey__ !== 'count';
 			}
 		})
