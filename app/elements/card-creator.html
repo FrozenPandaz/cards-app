@@ -1,55 +1,39 @@
 <dom-module is="card-creator">
 	<style>
+
 		paper-material {
-			width: 90%;
-			margin: auto;
-			margin-top: 5%;
 			padding: 20px;
 			elevation: 2;
-			display: block;
-			min-width: 580px;
-			min-height: 400px;
+			display: inline-block;
+			width: 100%;
+			min-height: 80px;
 		}
-		paper-toggle-button {
-			float:right;
-			margin-bottom: 10px;
+		h1 {
+			display: inline-block;
+			width: 6em;
 		}
 		form {
 			position: relative;
-			float: left;
+			margin-right: 40px;
 			display: block;
-			width: 50%;
+			float: right;
+		}
+		paper-toggle-button {
+			float: right;
 		}
 		paper-button {
 			position: relative;
 			display: inline-block;
 		}
 		paper-input {
-			display: block;
-			margin-top: 2em;
+			display: inline-block;
 		}
 		custom-card {
 			display: inline-block;
 			float: left;
 			margin-left: 20px;
 		}
-		custom-card ::content paper-card {
-			width: 240px;
-			height: 240px;
-		}
-		custom-card ::content paper-card:hover {
-			width: 260px;
-			height: 260px;
-		}
 
-		custom-card.true ::content paper-card {
-			background-color: black;
-			color: white;
-		}
-		span {
-			display: inline-block;
-			width: 100%;
-		}
 	</style>
 	<template>
 		<firebase-document
@@ -57,17 +41,15 @@
 			location="https://card-app.firebaseio.com/cards"
 			data="{{data}}"></firebase-document>
 		<paper-material>
-			<span>
-				<h1>Submit your own Cards</h1>
-				<form is="iron-form" id="form" action="/" target="_self">
-					<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
-					<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card" value="{{cardText::input}}"></paper-input>
-					<paper-button raised type="submit">Submit</paper-button>
-				</form>
-				<custom-card class$="{{black}}"card-text=[[cardText]]>
-				</custom-card>
-			</span>
+			<h1>Submit your own Cards</h1>
+			<form is="iron-form" id="form" action="/" target="_self">
+				<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
+				<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card" value="{{cardText::input}}"></paper-input>
+				<paper-button raised type="submit">Submit</paper-button>
+			</form>
 		</paper-material>
+			<custom-card black$="{{black}}" card-text=[[cardText]]>
+			</custom-card>
 	</template>
 	<script>
 		Polymer({

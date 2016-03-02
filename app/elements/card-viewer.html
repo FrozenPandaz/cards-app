@@ -1,10 +1,6 @@
 <dom-module is="card-viewer">
 	<style>
-
-		custom-card.black ::content paper-card {
-			background-color: black;
-			color: white;
-		}
+		
 	</style>
 	<template>
 		<firebase-collection
@@ -16,17 +12,17 @@
 		<h1>Check out these cards!</h1>
 		<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
 		<iron-pages selected="{{type}}" attr-for-selected="id">
-			<paper-material id="white">
+			<span id="white">
 				<template is="dom-repeat" items="{{white-cards}}" filter=notCount>
 					<custom-card class="white" card-text="{{item.text}}"></custom-card>
 				</template>
-			</paper-material>
+			</span>
 
-			<paper-material id="black">
+			<span id="black">
 				<template is="dom-repeat" class="black" items="{{black-cards}}" filter=notCount>
-					<custom-card class="black" card-text="{{item.text}}"></custom-card>
+					<custom-card black card-text="{{item.text}}"></custom-card>
 				</template>
-			</paper-material>
+			</span>
 		</iron-pages>
 	</template>
 	<script>
