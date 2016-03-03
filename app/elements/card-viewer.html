@@ -26,13 +26,13 @@
 		<iron-pages selected="{{type}}" attr-for-selected="id">
 			<span id="white">
 				<template is="dom-repeat" items="{{white-cards}}" filter=notCount>
-					<custom-card class="white" card-text="{{item.text}}"></custom-card>
+					<custom-card class="white" card-text="{{item.text}}" id="{{item.__firebaseKey__}}"></custom-card>
 				</template>
 			</span>
 
 			<span id="black">
-				<template is="dom-repeat" class="black" items="{{black-cards}}" filter=notCount>
-					<custom-card black card-text="{{item.text}}"></custom-card>
+				<template is="dom-repeat" items="{{black-cards}}" filter=notCount>
+					<custom-card black card-text="{{item.text}}" id="{{item.__firebaseKey__}}"></custom-card>
 				</template>
 			</span>
 		</iron-pages>
@@ -43,6 +43,7 @@
 			behaviors: [Polymer.NeonAnimationRunnerBehavior],
 			properties: {
 				black: Boolean,
+				cardId: String,
 				type: {
 					type:String,
 					computed: 'getType(black)',

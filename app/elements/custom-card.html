@@ -8,7 +8,7 @@
 			height: 100px;
 			width: 100px;
 			border: 1px black solid;
-			font: "Roboto";
+			font-family: 'Roboto', 'Noto', sans-serif;
 			text-align: center;
 			padding: 20px;
 		}
@@ -47,6 +47,9 @@
 					type: String,
 					computed: 'parseText(cardText)',
 					notify: true
+				},
+				cardId: {
+					type: String
 				},
 				animationConfig: {
 					value: function() {

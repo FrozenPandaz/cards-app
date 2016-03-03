@@ -14,9 +14,10 @@
 		}
 		form {
 			position: relative;
-			margin-right: 40px;
+			padding: 40px;
 			display: block;
 			float: right;
+			width: 60%;
 		}
 		paper-toggle-button {
 			float: right;
@@ -34,6 +35,17 @@
 			margin-left: 20px;
 		}
 
+		@media (max-width: 600px) {
+			h1 {
+				width: 100%;
+				text-align: center;
+			}
+
+			form {
+				width: 80%;
+			}
+		}
+
 	</style>
 	<template>
 		<firebase-document
@@ -41,21 +53,28 @@
 			location="https://card-app.firebaseio.com/cards"
 			data="{{data}}"></firebase-document>
 		<paper-material>
-			<h1>Submit your own Cards</h1>
-			<form is="iron-form" id="form" action="/" target="_self">
+			<h1>Submit your own Cards</h1><paper-button on-tap="clearCards">x</paper-button>
+			<form is="iron-form" id="form" action="/" target="_self" on-iron-form-submit="submitForm" on-iron-form-reset="resetForm">
 				<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
 				<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card" value="{{cardText::input}}"></paper-input>
-				<paper-button raised type="submit">Submit</paper-button>
+				<paper-button raised type="submit" on-tap="submitForm">Submit</paper-button>
 			</form>
 		</paper-material>
-			<custom-card black$="{{black}}" card-text=[[cardText]]>
-			</custom-card>
+		<template is="dom-repeat" items="{{createdCards}}">
+			<custom-card black$="{{item.black}}" card-text=[[item.text]]></custom-card>
+		</template>
+		<custom-card black$="{{black}}" card-text=[[cardText]]></custom-card>
 	</template>
 	<script>
 		Polymer({
 			is: 'card-creator',
 			properties: {
 				cardText: String,
+				createdCards: {
+					type: Array,
+					value: [],
+					notify: true
+				},
 				black: {
 					type: Boolean,
 					notify: true
@@ -69,40 +88,44 @@
 					readOnly: true
 				}
 			},
-			ready: function() {
-				var form =this.$.form,
-					_this = this;
-				form.addEventListener('iron-form-submit', function() {
-					_this.submitForm();
-				});
-			},
 			submitForm: function() {
-				console.log('submit form');
 				var type = this.black ? 'black' : 'white',
 					firebase = this.$.firebase,
 					count = firebase.data[type].count,
 					card = this.black ? {
 						text: this.cardText,
+						black: true,
 						response_count: this.cardText.split(/_/).length - 1,
 						stats: {
 							play_count: 0
 						}
 					} : {
 						text: this.cardText,
+						black: false,
 						stats: {
 							draw_count: 0,
 							play_count: 0,
 							win_count: 0
 						}
-					} ;
+					};
+				this.createdCards.push(card);
+				console.log(card, this.createdCards);
 				firebase.query.child(type).child('count').set(count+1);
 				firebase.query.child(type).child('card_'+(count+1)).set(card);
+				this.$.form.reset();
+			},
+			resetForm: function() {
+				this.cardText = "";
 			},
 			getPattern: function(black) {
 				return black ? '([^_]*_[^_]*){1,2}' : '^((?!_).)*$';
 			},
 			getError: function(black) {
 				return black ? 'Black Cards must contain 1 or 2 fields("_")' : 'White Cards must not contain any "_"';
+			},
+			clearCards: function() {
+				var type = this.black ? 'black' : 'white';
+				this.$.firebase.query.child(type).set({count: 0});
 			}
 		})
 	</script>
