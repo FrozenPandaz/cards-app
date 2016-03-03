@@ -1,6 +1,6 @@
 {
   "firebase": "card-app",
-  "public": "dist",
+  "public": "app",
   "ignore": [
     "firebase.json",
     "**/.*",

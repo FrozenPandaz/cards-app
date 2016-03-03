@@ -13,6 +13,7 @@ gulp.task('webserver', function() {
 });
 
 gulp.task('build', function() {
+	gulp.src('app/bower_components/*').pipe(gulp.dest('dist/bower_components'));
 	return gulp.src('app/index.html')
 		.pipe(vulcanize({
 			stripComments: true,
@@ -20,6 +21,10 @@ gulp.task('build', function() {
 			inlineScripts: true
 		}))
 		.pipe(gulp.dest('dist'));
+});
+
+gulp.task('clean', function() {
+
 });
 
 gulp.task('default', ['webserver']);
