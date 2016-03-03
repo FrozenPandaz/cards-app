@@ -6,3 +6,6 @@ bower_components/
 
 #Sublime Stuff
 **.sublime**
+
+#Build Destination
+dist/

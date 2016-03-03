@@ -8,6 +8,7 @@
     "gulp": "^3.9.1"
   },
   "devDependencies": {
+    "gulp-vulcanize": "^6.1.0",
     "gulp-webserver": "^0.9.1"
   },
   "scripts": {
