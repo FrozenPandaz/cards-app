@@ -94,7 +94,8 @@
 			},
 			addCard: function(text, type) {
 				var firebase = this.$.firebase,
-					count = firebase.data[type].count,
+					count = firebase.data && firebase.data[type] && firebase.data[type].count ? firebase.data[type].count : 0,
+					existing_cards = firebase.data[type].existingCards || '',
 					card = this.black ? {
 						text: text,
 						black: true,
@@ -110,10 +111,21 @@
 							play_count: 0,
 							win_count: 0
 						}
-					};
+					},
+					new_data;
+
+				if (existing_cards.split('|').indexOf(card.text)) {
+					alert('This card already exists');
+					return;
+				}
+
 				this.push('createdCards', card);
-				firebase.query.child(type).child('count').set(count+1);
-				firebase.query.child(type).child('card_'+(count+1)).set(card);
+				new_data = {
+					count: count+1,
+					existingCards: existing_cards === '' ? card.text : existing_cards + '|' + card.text,
+				};
+				new_data['card_'+ count] = card;
+				firebase.query.child(type).update(new_data);
 			},
 			resetForm: function() {
 				this.cardText = "";
