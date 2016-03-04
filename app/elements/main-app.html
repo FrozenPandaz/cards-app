@@ -2,7 +2,7 @@
 	<style>
 		paper-drawer-panel {
 			--paper-drawer-panel-drawer-container: {
-				background-color: grey;
+				background-color: beige;
 			};
 			--paper-drawer-panel-main-container: {
 				overflow-y: auto;
@@ -38,6 +38,7 @@
 	</style>
 	<template>
 		<link rel="import" href="router.html" />
+		<iron-media-query id="mq" query="(max-width: 600px)" query-matches="{{queryMatches}}"></iron-media-query>
 		<paper-header-panel>
 			<paper-toolbar>
 	  			<paper-icon-button icon="menu" on-tap="toggleDrawer"></paper-icon-button>
@@ -103,9 +104,11 @@
 						'card-creator',
 						'card-viewer'
 					];
-
-				this.playAnimation('entry');
 				
+				if (!this.$.mq.queryMatches) {
+					this.playAnimation('entry');
+				}
+
 				setInterval(function() {
 					// _this.cardId = selection.selectedParams.card;
 					_this.gameId = selection.selectedParams.gameId && other_routes.indexOf(selection.selectedParams.gameId) < 0 ? selection.selectedParams.gameId : null;
