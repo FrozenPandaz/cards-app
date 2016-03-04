@@ -89,18 +89,21 @@
 				}
 			},
 			submitForm: function() {
-				var type = this.black ? 'black' : 'white',
-					firebase = this.$.firebase,
+				this.addCard(this.cardText, this.black ? 'black' : 'white');
+				this.$.form.reset();
+			},
+			addCard: function(text, type) {
+				var firebase = this.$.firebase,
 					count = firebase.data[type].count,
 					card = this.black ? {
-						text: this.cardText,
+						text: text,
 						black: true,
 						response_count: this.cardText.split(/_/).length - 1,
 						stats: {
 							play_count: 0
 						}
 					} : {
-						text: this.cardText,
+						text: text,
 						black: false,
 						stats: {
 							draw_count: 0,
@@ -108,11 +111,9 @@
 							win_count: 0
 						}
 					};
-				this.createdCards.push(card);
-				console.log(card, this.createdCards);
+				this.push('createdCards', card);
 				firebase.query.child(type).child('count').set(count+1);
 				firebase.query.child(type).child('card_'+(count+1)).set(card);
-				this.$.form.reset();
 			},
 			resetForm: function() {
 				this.cardText = "";

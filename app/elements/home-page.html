@@ -86,7 +86,12 @@
 					e.preventDefault();
 					return;
 				}
-				this.firebase.query.child(this.gameId).set({users:0, name:this.gameName || null});
+				var game = {
+					users: 0,
+					name: this.gameName || null,
+					created: new Date().getTime()
+				};
+				this.firebase.query.child(this.gameId).set(game);
 				this.firebase.query.child('count').set(this.firebase.data.count + 1);
 				MoreRouting.navigateTo('game',{gameId: this.gameId});
 			}
