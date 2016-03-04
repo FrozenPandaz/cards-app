@@ -80,7 +80,7 @@
 				this.firebase = this.$.firebase;
 			},
 			newGame: function(e) {
-				this.gameId = this.gameName ? this.gameName.replace(' ', '-') : 'game-' + this.firebase.data.count;
+				this.gameId = this.gameName ? this.gameName.replace(/\s/, '-') : 'game-' + this.firebase.data.count;
 				if (this.firebase.data[this.gameId]) {
 					alert('This game name is already taken');
 					e.preventDefault();

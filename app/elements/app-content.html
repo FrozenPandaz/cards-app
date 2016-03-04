@@ -10,10 +10,28 @@
 	<template>
 		<firebase-document
 			id="firebase"
-			location$="{{getUrl(game)}}"
-			data="{{data}}"></firebase-document>
+			location$="{{url}}"
+			data="{{game_data}}"></firebase-document>
+		<firebase-collection
+			id="firebase"
+			location$="{{user_url}}"
+			data="{{users}}"></firebase-collection>
+		<iron-localstorage
+			name="app-storage"
+			value="{{user_data}}"
+			on-iron-localstorage-load-empty="promptForUser"></iron-localstorage>
 		
-		<h1>{{data.users}} in {{data.name}}!</h1>
+		<template is="dom-repeat" items="{{users}}">
+			{{item.name}}
+		</template>
+
+		<paper-dialog id="prompt">
+			<h1>Welcome to {{game_data.name}}!</h1>
+			<form is="iron-form" on-iron-form-submit="newUser">
+				<paper-input label="What is your name?" value="{{name::input}}">
+				</paper-input>
+			</form>
+		</paper-dialog>
 		<custom-card black card-text="This is text."></custom-card>
 	</template>
 	<script>
@@ -24,14 +42,48 @@
 					type: String,
 					notify: true
 				},
+				game_data: {
+					type: Object,
+					notify: true
+				},
+				name: String,
+				user_data: Object,
 				url: {
 					type: String,
 					computed: 'getUrl(game)',
 					notify: true
+				},
+				user_url: {
+					type: String,
+					computed: 'getUserUrl(url)'
 				}
+			},
+			attached: function() {
+				// console.log(this.user_data.userId = 'user_');
+			},
+			newUser: function() {
+				var new_data = {
+					users: {
+						count: this.$.firebase.data.users.count+1
+					}
+				},
+				user_id = 'user_'+ this.$.firebase.data.users.count;
+				new_data.users[user_id] = {
+					name: this.name
+				};
+				this.user_data = new_data;
+				this.$.firebase.query.update(new_data);
+				this.$.prompt.close();
 			},
 			getUrl: function(game) {
 				return "https://card-app.firebaseio.com/games/" + game;
+			},
+			getUserUrl: function(url) {
+				return url  + "/users";
+			},
+			promptForUser: function() {
+				this.$.prompt.open();
+				console.log('first time here');
 			}
 		});
 	</script>
