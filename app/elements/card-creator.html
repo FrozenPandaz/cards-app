@@ -114,7 +114,7 @@
 					},
 					new_data;
 
-				if (existing_cards.split('|').indexOf(card.text)) {
+				if (existing_cards.split('|').indexOf(card.text) > -1) {
 					alert('This card already exists');
 					return;
 				}

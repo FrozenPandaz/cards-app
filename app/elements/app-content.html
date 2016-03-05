@@ -9,21 +9,28 @@
 	</style>
 	<template>
 		<firebase-document
-			id="firebase"
+			id="game_firebase"
 			location$="{{url}}"
 			data="{{game_data}}"></firebase-document>
 		<firebase-collection
-			id="firebase"
+			id="user_firebase"
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
 		<iron-localstorage
-			name="app-storage"
-			value="{{user_data}}"
-			on-iron-localstorage-load-empty="promptForUser"></iron-localstorage>
+			name="{{game}}"
+			value="{{user_data}}"></iron-localstorage>
 		
-		<template is="dom-repeat" items="{{users}}">
-			{{item.name}}
-		</template>
+		<paper-material>
+			<ol>
+				<template is="dom-repeat" items="{{users}}" filter="notCount" sort="byScore">
+					<li>{{item.name}} : {{item.score}}</li>
+				</template>
+			</ol>
+		</paper-material>
+
+		<paper-dialog id="start">
+			<paper-button on-tap="startGame">Start Game</paper-button>
+		</paper-dialog>
 
 		<paper-dialog id="prompt">
 			<h1>Welcome to {{game_data.name}}!</h1>
@@ -56,24 +63,101 @@
 				user_url: {
 					type: String,
 					computed: 'getUserUrl(url)'
+				},
+				gameStarted: {
+					type: Boolean,
+					computed: 'isGameStarted()'
 				}
 			},
+			observers: [
+				'onGameStartedChange(game_data.started)'
+			],
+			onGameStartedChange: function(started) {
+				this.fire('game-started');
+			},
+			isGameStarted: function() {
+				return this.$.game_firebase.data.started === true;
+			},
+			startGame: function() {
+				var black = {
+						total: 0,
+						deck: [],
+						copy: []
+					},
+					white = {
+						total: 0,
+						deck: [],
+						copy: []
+					},
+					rand_pos;
+				(new Firebase("https://card-app.firebaseio.com/cards/")).once('value', function(snapshot) {
+					for (var card in snapshot.child('white').val()) {
+						if (card !== "count" && card !== 'existingCards') {
+							white.copy.push(card);
+						}
+					}
+					for (var card in snapshot.child('black').val()) {
+						if (card !== "count" && card !== 'existingCards') {
+							black.copy.push(card);
+						}
+					}
+				});
+
+				white.total = white.copy.length;
+				black.total = black.copy.length;
+				while (white.total > 0) {
+					rand_pos = Math.floor(Math.random()*white.total--);
+					white.deck.push(white.copy.splice(rand_pos,1)[0]);
+				}
+
+				while (black.total > 0) {
+					rand_pos = Math.floor(Math.random()*black.total--);
+					black.deck.push(black.copy.splice(rand_pos,1)[0]);
+				}
+
+
+				this.$.game_firebase.query.update({started: new Date().getTime(), deckWhite: white.deck, deckBlack: black.deck});
+				this.$.start.close();
+			},
 			attached: function() {
-				// console.log(this.user_data.userId = 'user_');
+				var _this = this;
+				setTimeout(function() {
+					if (!_this.user_data) {
+						_this.$.prompt.open();
+					}
+				}, 200);
+				this.$.start.open();
 			},
 			newUser: function() {
-				var new_data = {
-					users: {
-						count: this.$.firebase.data.users.count+1
-					}
-				},
-				user_id = 'user_'+ this.$.firebase.data.users.count;
-				new_data.users[user_id] = {
+				var count = this.$.game_firebase.data.users.count || 0,
+					user_id = 'user_' + count,
+					new_data = {
+						count: count + 1
+					};
+				this.user_data = {
+					id: user_id,
 					name: this.name
 				};
-				this.user_data = new_data;
-				this.$.firebase.query.update(new_data);
+				new_data[user_id] = {
+					name: this.name,
+					score: 0
+				};
+				this.$.user_firebase.query.update(new_data);
 				this.$.prompt.close();
+				this.$.start.open();
+			},
+			getPoints: function(user_id) {
+				return this.$.user_firebase.data[user_id].score;
+			},
+			addPoints: function(user_id, point) {
+				point = point || 1;
+				this.$.user_firebase.query.child(user_id).child('score').set(getScore(user_id) + 1);
+			},
+			byScore: function(a, b) {
+				return a.score > b.score;
+			},
+			notCount: function(item) {
+				return item.__firebaseKey__ !== "count";
 			},
 			getUrl: function(game) {
 				return "https://card-app.firebaseio.com/games/" + game;
@@ -83,7 +167,6 @@
 			},
 			promptForUser: function() {
 				this.$.prompt.open();
-				console.log('first time here');
 			}
 		});
 	</script>
