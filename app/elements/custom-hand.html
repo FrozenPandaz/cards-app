@@ -6,11 +6,12 @@
 			data="{{card_library}}"></firebase-document>
 		<div>
 			<template is="dom-repeat" items="{{cards}}" as="card_id">
-				<custom-card card-text$="{{getCardText(card_id, card_library)}}"></custom-card>
+				<custom-card on-tap="playCard" id="card-id" card-text$="{{getCardText(card_id, card_library)}}"></custom-card>
 			</template>
 		</div>
 	</template>
 	<script>
+	//TO-DO Rename this to cards-collection or something like that
 		Hand = Polymer({
 			is:"custom-hand",
 			properties: {
@@ -18,9 +19,39 @@
 					type: Array,
 					notify: true
 				},
-				card_library: Object
+				card_library: Object,
+				playedCard: {
+					type: String,
+					notify: true
+				},
+				clickable: {
+					type: String
+				},
+				cardsHidden: {
+					type: Boolean,
+					value: false,
+					notify: true,
+					observer: 'hiddenChanged'
+				}
+			},
+			hiddenChanged: function() {
+				this.set('cards', this.cards);
+			},
+			playCard: function(event) {
+				if (this.clickable !== "true") {
+					return;
+				}
+				var card_id = event.model.card_id;
+				this.arrayDelete('cards', card_id);
+				this.playedCard = card_id;
 			},
 			getCardText(card_id, card_library) {
+				if (this.cardsHidden) {
+					return "";
+				}
+				if (card_id.value) {
+					card_id = card_id.value;
+				}
 				return card_library[card_id].text;
 			},
 		});

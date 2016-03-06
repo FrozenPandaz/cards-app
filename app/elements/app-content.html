@@ -3,7 +3,7 @@
 		<iron-pages id="pages" selected="0">
 			<game-setup game$={{game}} started="{{started}}" user_id="{{user_id}}" user_data="
 			{{user_data}}"></game-setup>
-			<game-content game$={{game}} user_id="{{user_id}}"></game-content>
+			<game-content id="game" game$={{game}} user_id="{{user_id}}"></game-content>
 		</iron-pages>
 	</template>
 	<script>
@@ -26,8 +26,8 @@
 			onGameStarted: function() {
 				if (this.started && this.user_id) {
 					this.$.pages.selected = "1";
-					this.$$('game-content').$$('iron-localstorage').reload();
-					this.$$('game-content').drawHand();
+					this.$.game.reloadLocalStorage();
+					this.$.game.drawHand();
 				}
 			}
 		});

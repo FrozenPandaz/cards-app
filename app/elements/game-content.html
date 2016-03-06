@@ -11,7 +11,11 @@
 			bottom: 0px;
 			background-color: grey;
 			width: 100%;
-			height: 180px;
+			height: 200px;
+		}
+		#board {
+			bottom: 250px;
+			background-color: teal;
 		}
 	</style>
 	<template>
@@ -24,11 +28,14 @@
 			data="{{game_data}}"></firebase-document>
 		<firebase-collection
 			id="user_firebase"
+			location$="{{played_url}}"
+			data="{{cardsPlayed}}"></firebase-collection>
+		<firebase-collection
+			id="user_firebase"
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
 		{{user_id}}
 		<paper-button on-tap="drawHand">Draw Hand</paper-button>
-		<custom-card black card-text="This is text."></custom-card>
 		<paper-material>
 			<ol>
 				<template is="dom-repeat" items="{{users}}" filter="notCount" sort="byScore">
@@ -36,21 +43,21 @@
 				</template>
 			</ol>
 		</paper-material>
-		<template is="dom-if" if={{user_data.cards}}>
-			<custom-hand cards={{user_data.cards}}></custom-hand>
-		</template>
+		<custom-card black card-text="{{blackCardText}}"></custom-card>
+		<custom-hand id="board" cards={{cardsPlayed}} cards-hidden={{cardsHidden}}></custom-hand>
+		<!-- <template is="dom-if" if={{user_data.cards}}> -->
+			<custom-hand cards={{user_data.cards}} played-card={{playedCard}} clickable="true"></custom-hand>
+		<!-- </template> -->
 	</template>
 	<script>
-		Hand = Polymer({
+		Polymer({
 			is:"game-content",
 			properties: {
 				game: {
-					type: String,
-					notify: true
+					type: String
 				},
 				game_data: {
-					type: Object,
-					notify: true
+					type: Object
 				},
 				user_data: {
 					type: Object
@@ -63,16 +70,44 @@
 				},
 				url: {
 					type: String,
-					computed: 'getUrl(game)',
-					notify: true
+					computed: 'getUrl(game)'
 				},
 				user_url: {
 					type: String,
 					computed: 'getUserUrl(url)'
+				},
+				played_url: {
+					type: String,
+					computed: 'getPlayedUrl(url)'
+				},
+				playedCard: {
+					type: String,
+					observer: 'cardPlayed'
+				},
+				cardsPlayed: {
+					type: Array
+				},
+				cardsHidden: {
+					type: Boolean,
+					value: true
+				},
+				blackCardText: {
+					type: String
+				}
+			},
+			toChoosePhase: function() {
+				this.cardsHidden = false;
+			},
+			cardPlayed: function() {
+				var played = this.game_data.cardsPlayed || [];
+				played.push(this.playedCard);
+				this.$.game_firebase.query.child('cardsPlayed').set(played);
+				console.log(this.users);
+				if (played.length >= this.users.length) {
+					this.toChoosePhase();
 				}
 			},
 			reloadLocalStorage: function() {
-				console.log('reload');
 				this.$$('iron-localstorage').reload();
 			},
 			drawHand: function() {
@@ -84,7 +119,6 @@
 						return;
 					}
 					if (!_this.user_data || !_this.game_data) {
-						console.log(_this);
 						return;
 					}
 					_this.drawCard();
@@ -108,6 +142,9 @@
 			},
 			notCount: function(item) {
 				return item.__firebaseKey__ !== "count";
+			},
+			getPlayedUrl: function(url) {
+				return url + "/cardsPlayed";
 			},
 			getUrl: function(game) {
 				return "https://card-app.firebaseio.com/games/" + game;
