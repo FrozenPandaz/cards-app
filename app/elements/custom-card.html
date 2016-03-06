@@ -22,9 +22,12 @@
 			background-color: black;
 			color: white;
 		}
+		.hidden {
+			color: transparent;
+		}
 	</style>
 	<template>
-		<paper-material class$="{{type}}"><paper-ripple></paper-ripple>[[parsedText]]</paper-material>
+		<paper-material id="card" class$="{{type}} {{hidden}}"><paper-ripple></paper-ripple>[[parsedText]]</paper-material>
 	</template>
 	<script>
 		CustomCard = Polymer({
@@ -38,6 +41,14 @@
 					computed: 'getType(black)',
 					notify: true
 				},
+				hidden: {
+					type: String,
+					computed: 'isHidden(cardHidden)'
+				},
+				cardHidden: {
+					type: Boolean,
+					value: false
+				},
 				cardText: {
 					type: String,
 					value: "This is the Text",
@@ -47,9 +58,6 @@
 					type: String,
 					computed: 'parseText(cardText)',
 					notify: true
-				},
-				cardId: {
-					type: String
 				},
 				animationConfig: {
 					value: function() {
@@ -64,6 +72,9 @@
 						}
 					}
 				}
+			},
+			isHidden: function(cardHidden) {
+				return cardHidden ? 'hidden' : '';
 			},
 			attached: function() {
 				return this.animated ? this.playAnimation('entry') : false;

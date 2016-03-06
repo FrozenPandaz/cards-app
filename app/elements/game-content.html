@@ -34,7 +34,7 @@
 			id="user_firebase"
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
-		{{user_id}}
+		{{user_id}} {{phase}}
 		<paper-button on-tap="drawHand">Draw Hand</paper-button>
 		<paper-material>
 			<ol>
@@ -44,9 +44,9 @@
 			</ol>
 		</paper-material>
 		<custom-card black card-text="{{blackCardText}}"></custom-card>
-		<custom-hand id="board" cards={{cardsPlayed}} cards-hidden={{cardsHidden}}></custom-hand>
+		<custom-hand id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-card={{pickedCards}}></custom-hand>
 		<!-- <template is="dom-if" if={{user_data.cards}}> -->
-			<custom-hand cards={{user_data.cards}} played-card={{playedCard}} clickable="true"></custom-hand>
+			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} clickable></custom-hand>
 		<!-- </template> -->
 	</template>
 	<script>
@@ -80,9 +80,8 @@
 					type: String,
 					computed: 'getPlayedUrl(url)'
 				},
-				playedCard: {
-					type: String,
-					observer: 'cardPlayed'
+				playedCards: {
+					type: Array
 				},
 				cardsPlayed: {
 					type: Array
@@ -93,18 +92,52 @@
 				},
 				blackCardText: {
 					type: String
+				},
+				phase: {
+					type: String,
+					computed: 'getPhase(game_data)',
+					observer: 'phaseChanged'
+				},
+				pickedCards: {
+					type: Array
 				}
 			},
-			toChoosePhase: function() {
-				this.cardsHidden = false;
+			observers: [
+				'cardPlayed(playedCards.splices)',
+				'cardPlayedOnBoard(game_data.cardsPlayed.splices)'
+			],
+			phaseChanged: function() {
+				if (this.phase == 'choose') {
+					this.$.board.clickable = true;
+					this.$.hand.clickable = false;
+					this.$.board.cardsHidden = false;
+				}
 			},
-			cardPlayed: function() {
+			getPhase: function(game_data) {
+				return game_data.phase;
+			},
+			setPhase: function(phase) {
+				this.$.game_firebase.query.child('phase').set(phase);
+			},
+			cardPlayedOnBoard: function() {
+				if (!this.game_data || !this.game_data.cardsPlayed || !this.users) {
+					return;
+				}
+				var black_fields = 1;
+				if (this.game_data.cardsPlayed.length >= ((this.users.length - 1) * black_fields)) {
+					this.setPhase('choose');
+				}
+			},
+			cardPlayed: function(splices) {
+				if (!this.playedCards || this.playedCards.length < 1) {
+					return;
+				}
 				var played = this.game_data.cardsPlayed || [];
-				played.push(this.playedCard);
+				played.push(this.playedCards[this.playedCards.length -1]);
 				this.$.game_firebase.query.child('cardsPlayed').set(played);
-				console.log(this.users);
-				if (played.length >= this.users.length) {
-					this.toChoosePhase();
+				var black_fields = 1;
+				if (this.playedCards.length >= black_fields) {
+					this.$.hand.clickable = false;
 				}
 			},
 			reloadLocalStorage: function() {
