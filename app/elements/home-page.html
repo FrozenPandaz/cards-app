@@ -90,6 +90,7 @@
 					name: this.gameName || null,
 					created: new Date().getTime()
 				};
+				console.log('setting game');
 				this.firebase.query.child(this.gameId).set(game);
 				this.firebase.query.child('count').set((this.firebase.data.count || 0) + 1);
 				MoreRouting.navigateTo('game', {gameId: this.gameId});

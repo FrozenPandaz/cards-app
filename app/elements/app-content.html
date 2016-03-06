@@ -6,40 +6,56 @@
 			margin-right: 20px;
 			margin-top: 20px;
 		}
+		custom-hand {
+			position: absolute;
+			bottom: 0px;
+			background-color: grey;
+			width: 100%;
+			height: 180px;
+		}
 	</style>
 	<template>
-		<firebase-document
-			id="game_firebase"
-			location$="{{url}}"
-			data="{{game_data}}"></firebase-document>
 		<firebase-collection
 			id="user_firebase"
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
+		<firebase-document
+			id="game_firebase"
+			location$="{{url}}"
+			data="{{game_data}}"></firebase-document>
 		<iron-localstorage
 			name="{{game}}"
-			value="{{user_data}}"></iron-localstorage>
-		
-		<paper-material>
-			<ol>
-				<template is="dom-repeat" items="{{users}}" filter="notCount" sort="byScore">
-					<li>{{item.name}} : {{item.score}}</li>
+			value="{{user_data}}"
+			on-iron-localstorage-load-empty="promptForUser"></iron-localstorage>
+		<iron-pages id="pages" selected="0">
+			<div>
+				<paper-dialog id="prompt">
+					<h1>Welcome to {{game_data.name}}!</h1>
+					<form is="iron-form" on-iron-form-submit="newUser">
+						<paper-input label="What is your name?" value="{{name::input}}">
+						</paper-input>
+					</form>
+				</paper-dialog>
+				<paper-dialog id="start">
+					<paper-button on-tap="startGame">Start Game</paper-button>
+				</paper-dialog>
+			</div>
+			<div>
+				{{user_id}}
+				<paper-button on-tap="drawHand">Draw Hand</paper-button>
+				<custom-card black card-text="This is text."></custom-card>
+				<paper-material>
+					<ol>
+						<template is="dom-repeat" items="{{users}}" filter="notCount" sort="byScore">
+							<li>{{item.name}} : {{item.score}}</li>
+						</template>
+					</ol>
+				</paper-material>
+				<template is="dom-if" if$={{user_data.cards}}>
+					<custom-hand cards={{user_data.cards}}></custom-hand>
 				</template>
-			</ol>
-		</paper-material>
-
-		<paper-dialog id="start">
-			<paper-button on-tap="startGame">Start Game</paper-button>
-		</paper-dialog>
-
-		<paper-dialog id="prompt">
-			<h1>Welcome to {{game_data.name}}!</h1>
-			<form is="iron-form" on-iron-form-submit="newUser">
-				<paper-input label="What is your name?" value="{{name::input}}">
-				</paper-input>
-			</form>
-		</paper-dialog>
-		<custom-card black card-text="This is text."></custom-card>
+			</div>
+		</iron-pages>
 	</template>
 	<script>
 		AppContent = Polymer({
@@ -54,7 +70,17 @@
 					notify: true
 				},
 				name: String,
-				user_data: Object,
+				user_data: {
+					type: Object,
+					observer: 'onUserChanged'
+				},
+				user_id: {
+					type: String,
+					computed: 'getUserId(user_data)'
+				},
+				users: {
+					type: Array
+				},
 				url: {
 					type: String,
 					computed: 'getUrl(game)',
@@ -64,19 +90,71 @@
 					type: String,
 					computed: 'getUserUrl(url)'
 				},
+				hand: {
+					type: Array,
+					computed: 'getUserHand(user_data)',
+					notify: true
+				},
 				gameStarted: {
 					type: Boolean,
-					computed: 'isGameStarted()'
+					computed: 'isGameStarted(game_data)',
+					observer: 'onGameStartedChange',
+					notify: true
 				}
 			},
-			observers: [
-				'onGameStartedChange(game_data.started)'
-			],
-			onGameStartedChange: function(started) {
-				this.fire('game-started');
+			getUserHand: function(user_data) {
+				if (!user_data) {
+					return;
+				}
+				return user_data.cards;
 			},
-			isGameStarted: function() {
-				return this.$.game_firebase.data.started === true;
+			getUserId: function(user_data) {
+				if (!user_data) {
+					return;
+				}
+				return user_data.id;
+			},
+			drawHand: function() {
+				var counter = 0;
+				while (counter < 7) {
+					counter++;
+					this.drawCard(this.game_data.deckWhite);
+				}
+			},
+			drawCard: function(deck) {
+				console.log('drawCard');
+				card = deck.splice(0,1)[0];
+				// current_hand = hand || [];
+				// current_hand.push(card[0]);
+				this.push('user_data.cards', card);
+				console.log(this.user_data.cards);
+				// this.set('user_data.cards', current_hand);
+				// this.set('hand', current_hand);
+				this.$.game_firebase.query.child('deckWhite').set(deck);
+			},
+			onUserChanged: function() {
+				this.$.prompt.close();
+				if (this.$.game_firebase.data && !this.$.game_firebase.data.started) {
+					this.$.start.open();
+				}
+			},
+			onGameStartedChange: function(started) {
+				if (started && this.user_data) {
+					console.log('game started');
+					this.$.start.close();
+					this.$.pages.selected = "1";
+					if (!this.$$('custom-hand') || !this.$$('custom-hand').cards || this.$$('custom-hand').cards.length < 7) {
+						this.drawHand();
+					}
+				} else if (this.user_data) {
+					this.$.start.open();
+				}
+			},
+			isGameStarted: function(game_data) {
+				if (!game_data) {
+					return;
+				}
+				return !!game_data.started;
 			},
 			startGame: function() {
 				var black = {
@@ -115,34 +193,30 @@
 					black.deck.push(black.copy.splice(rand_pos,1)[0]);
 				}
 
-
-				this.$.game_firebase.query.update({started: new Date().getTime(), deckWhite: white.deck, deckBlack: black.deck});
-				this.$.start.close();
-			},
-			attached: function() {
-				var _this = this;
-				setTimeout(function() {
-					if (!_this.user_data) {
-						_this.$.prompt.open();
-					}
-				}, 200);
-				this.$.start.open();
+				if (this.game_data && this.user_data) {
+					this.$.game_firebase.query.update({
+						started: new Date().getTime(),
+						deckWhite: white.deck,
+						deckBlack: black.deck
+					});
+				}
 			},
 			newUser: function() {
-				var count = this.$.game_firebase.data.users.count || 0,
+				var count = this.game_data.users.count || 0,
 					user_id = 'user_' + count,
 					new_data = {
 						count: count + 1
 					};
-				this.user_data = {
+				this.set('user_data', {
 					id: user_id,
-					name: this.name
-				};
+					name: this.name,
+					cards: []
+				});
 				new_data[user_id] = {
 					name: this.name,
 					score: 0
 				};
-				this.$.user_firebase.query.update(new_data);
+				this.$.game_firebase.query.child('users').update(new_data);
 				this.$.prompt.close();
 				this.$.start.open();
 			},

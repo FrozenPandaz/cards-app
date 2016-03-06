@@ -1,12 +1,12 @@
 <dom-module is="custom-hand">
 	<template>
-		<firebase-collection
-			location$="{{url}}"
-			data="{{cards}}"
-		></firebase-collection>
+		<firebase-document
+			id="card_library"
+			location="https://card-app.firebaseio.com/cards/white"
+			data="{{card_library}}"></firebase-document>
 		<div>
-			<template is="dom-repeat" items="{{cards}}" as="card">
-				<custom-card card-text="{{card.value}}"></custom-card>
+			<template is="dom-repeat" items="{{cards}}" as="card_id">
+				<custom-card card-text$="{{getCardText(card_id, card_library)}}"></custom-card>
 			</template>
 		</div>
 	</template>
@@ -14,23 +14,15 @@
 		Hand = Polymer({
 			is:"custom-hand",
 			properties: {
-				game: {
-					type:String,
+				cards: {
+					type: Array,
 					notify: true
 				},
-				user: {
-					type:String,
-					notify: true
-				},
-				url: {
-					type: String,
-					computed: 'getUrl(game,user)',
-					notify: true
-				}
+				card_library: Object
 			},
-			getUrl: function(game, user) {
-				return "https://card-app.firebaseio.com/games/" + game + "/" + user + "/cards/";
-			}
+			getCardText(card_id, card_library) {
+				return card_library[card_id].text;
+			},
 		});
 	</script>
 </dom-module>
