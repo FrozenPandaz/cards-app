@@ -1,0 +1,120 @@
+<dom-module is="game-content">
+	<style>
+		custom-card {
+			position: relative;
+			float: right;
+			margin-right: 20px;
+			margin-top: 20px;
+		}
+		custom-hand {
+			position: absolute;
+			bottom: 0px;
+			background-color: grey;
+			width: 100%;
+			height: 180px;
+		}
+	</style>
+	<template>
+		<iron-localstorage
+			name$="{{game}}"
+			value="{{user_data}}"></iron-localstorage>
+		<firebase-document
+			id="game_firebase"
+			location$="{{url}}"
+			data="{{game_data}}"></firebase-document>
+		<firebase-collection
+			id="user_firebase"
+			location$="{{user_url}}"
+			data="{{users}}"></firebase-collection>
+		{{user_id}}
+		<paper-button on-tap="drawHand">Draw Hand</paper-button>
+		<custom-card black card-text="This is text."></custom-card>
+		<paper-material>
+			<ol>
+				<template is="dom-repeat" items="{{users}}" filter="notCount" sort="byScore">
+					<li>{{item.name}} : {{item.score}}</li>
+				</template>
+			</ol>
+		</paper-material>
+		<template is="dom-if" if={{user_data.cards}}>
+			<custom-hand cards={{user_data.cards}}></custom-hand>
+		</template>
+	</template>
+	<script>
+		Hand = Polymer({
+			is:"game-content",
+			properties: {
+				game: {
+					type: String,
+					notify: true
+				},
+				game_data: {
+					type: Object,
+					notify: true
+				},
+				user_data: {
+					type: Object
+				},
+				user_id: {
+					type: String
+				},
+				users: {
+					type: Array
+				},
+				url: {
+					type: String,
+					computed: 'getUrl(game)',
+					notify: true
+				},
+				user_url: {
+					type: String,
+					computed: 'getUserUrl(url)'
+				}
+			},
+			reloadLocalStorage: function() {
+				console.log('reload');
+				this.$$('iron-localstorage').reload();
+			},
+			drawHand: function() {
+				var _this = this,
+					interval,
+				interval = setInterval(function(){
+					if (_this.user_data.cards.length >= 7) {
+						clearInterval(interval);
+						return;
+					}
+					if (!_this.user_data || !_this.game_data) {
+						console.log(_this);
+						return;
+					}
+					_this.drawCard();
+				}, 200);
+			},
+			drawCard: function() {
+				var deck = this.game_data.deckWhite,
+					card = deck.splice(0,1)[0];
+				this.push('user_data.cards', card);
+				this.$.game_firebase.query.child('deckWhite').set(deck);
+			},
+			getPoints: function(user_id) {
+				return this.$.user_firebase.data[user_id].score;
+			},
+			addPoints: function(user_id, point) {
+				point = point || 1;
+				this.$.user_firebase.query.child(user_id).child('score').set(getScore(user_id) + 1);
+			},
+			byScore: function(a, b) {
+				return a.score > b.score;
+			},
+			notCount: function(item) {
+				return item.__firebaseKey__ !== "count";
+			},
+			getUrl: function(game) {
+				return "https://card-app.firebaseio.com/games/" + game;
+			},
+			getUserUrl: function(url) {
+				return url  + "/users";
+			}
+		});
+	</script>
+</dom-module>

@@ -1,60 +1,9 @@
 <dom-module is="app-content">
-	<style>
-		custom-card {
-			position: relative;
-			float: right;
-			margin-right: 20px;
-			margin-top: 20px;
-		}
-		custom-hand {
-			position: absolute;
-			bottom: 0px;
-			background-color: grey;
-			width: 100%;
-			height: 180px;
-		}
-	</style>
 	<template>
-		<firebase-collection
-			id="user_firebase"
-			location$="{{user_url}}"
-			data="{{users}}"></firebase-collection>
-		<firebase-document
-			id="game_firebase"
-			location$="{{url}}"
-			data="{{game_data}}"></firebase-document>
-		<iron-localstorage
-			name="{{game}}"
-			value="{{user_data}}"
-			on-iron-localstorage-load-empty="promptForUser"></iron-localstorage>
 		<iron-pages id="pages" selected="0">
-			<div>
-				<paper-dialog id="prompt">
-					<h1>Welcome to {{game_data.name}}!</h1>
-					<form is="iron-form" on-iron-form-submit="newUser">
-						<paper-input label="What is your name?" value="{{name::input}}">
-						</paper-input>
-					</form>
-				</paper-dialog>
-				<paper-dialog id="start">
-					<paper-button on-tap="startGame">Start Game</paper-button>
-				</paper-dialog>
-			</div>
-			<div>
-				{{user_id}}
-				<paper-button on-tap="drawHand">Draw Hand</paper-button>
-				<custom-card black card-text="This is text."></custom-card>
-				<paper-material>
-					<ol>
-						<template is="dom-repeat" items="{{users}}" filter="notCount" sort="byScore">
-							<li>{{item.name}} : {{item.score}}</li>
-						</template>
-					</ol>
-				</paper-material>
-				<template is="dom-if" if$={{user_data.cards}}>
-					<custom-hand cards={{user_data.cards}}></custom-hand>
-				</template>
-			</div>
+			<game-setup game$={{game}} started="{{started}}" user_id="{{user_id}}" user_data="
+			{{user_data}}"></game-setup>
+			<game-content game$={{game}} user_id="{{user_id}}"></game-content>
 		</iron-pages>
 	</template>
 	<script>
@@ -65,175 +14,21 @@
 					type: String,
 					notify: true
 				},
-				game_data: {
-					type: Object,
-					notify: true
-				},
-				name: String,
-				user_data: {
-					type: Object,
-					observer: 'onUserChanged'
+				started: {
+					type: Boolean,
+					observer: 'onGameStarted'
 				},
 				user_id: {
 					type: String,
-					computed: 'getUserId(user_data)'
-				},
-				users: {
-					type: Array
-				},
-				url: {
-					type: String,
-					computed: 'getUrl(game)',
-					notify: true
-				},
-				user_url: {
-					type: String,
-					computed: 'getUserUrl(url)'
-				},
-				hand: {
-					type: Array,
-					computed: 'getUserHand(user_data)',
-					notify: true
-				},
-				gameStarted: {
-					type: Boolean,
-					computed: 'isGameStarted(game_data)',
-					observer: 'onGameStartedChange',
-					notify: true
+					observer: 'onGameStarted'
 				}
 			},
-			getUserHand: function(user_data) {
-				if (!user_data) {
-					return;
-				}
-				return user_data.cards;
-			},
-			getUserId: function(user_data) {
-				if (!user_data) {
-					return;
-				}
-				return user_data.id;
-			},
-			drawHand: function() {
-				var counter = 0;
-				while (counter < 7) {
-					counter++;
-					this.drawCard(this.game_data.deckWhite);
-				}
-			},
-			drawCard: function(deck) {
-				card = deck.splice(0,1)[0];
-				this.push('user_data.cards', card);
-				this.$.game_firebase.query.child('deckWhite').set(deck);
-			},
-			onUserChanged: function() {
-				this.$.prompt.close();
-				if (this.$.game_firebase.data && !this.$.game_firebase.data.started) {
-					this.$.start.open();
-				}
-			},
-			onGameStartedChange: function(started) {
-				if (started && this.user_data) {
-					this.$.start.close();
+			onGameStarted: function() {
+				if (this.started && this.user_id) {
 					this.$.pages.selected = "1";
-					if (!this.$$('custom-hand') || !this.$$('custom-hand').cards || this.$$('custom-hand').cards.length < 7) {
-						this.drawHand();
-					}
-				} else if (this.user_data) {
-					this.$.start.open();
+					this.$$('game-content').$$('iron-localstorage').reload();
+					this.$$('game-content').drawHand();
 				}
-			},
-			isGameStarted: function(game_data) {
-				if (!game_data) {
-					return;
-				}
-				return !!game_data.started;
-			},
-			startGame: function() {
-				var black = {
-						total: 0,
-						deck: [],
-						copy: []
-					},
-					white = {
-						total: 0,
-						deck: [],
-						copy: []
-					},
-					rand_pos;
-				(new Firebase("https://card-app.firebaseio.com/cards/")).once('value', function(snapshot) {
-					for (var card in snapshot.child('white').val()) {
-						if (card !== "count" && card !== 'existingCards') {
-							white.copy.push(card);
-						}
-					}
-					for (var card in snapshot.child('black').val()) {
-						if (card !== "count" && card !== 'existingCards') {
-							black.copy.push(card);
-						}
-					}
-				});
-
-				white.total = white.copy.length;
-				black.total = black.copy.length;
-				while (white.total > 0) {
-					rand_pos = Math.floor(Math.random()*white.total--);
-					white.deck.push(white.copy.splice(rand_pos,1)[0]);
-				}
-
-				while (black.total > 0) {
-					rand_pos = Math.floor(Math.random()*black.total--);
-					black.deck.push(black.copy.splice(rand_pos,1)[0]);
-				}
-
-				if (this.game_data && this.user_data) {
-					this.$.game_firebase.query.update({
-						started: new Date().getTime(),
-						deckWhite: white.deck,
-						deckBlack: black.deck
-					});
-				}
-			},
-			newUser: function() {
-				var count = this.game_data.users.count || 0,
-					user_id = 'user_' + count,
-					new_data = {
-						count: count + 1
-					};
-				this.set('user_data', {
-					id: user_id,
-					name: this.name,
-					cards: []
-				});
-				new_data[user_id] = {
-					name: this.name,
-					score: 0
-				};
-				this.$.game_firebase.query.child('users').update(new_data);
-				this.$.prompt.close();
-				this.$.start.open();
-			},
-			getPoints: function(user_id) {
-				return this.$.user_firebase.data[user_id].score;
-			},
-			addPoints: function(user_id, point) {
-				point = point || 1;
-				this.$.user_firebase.query.child(user_id).child('score').set(getScore(user_id) + 1);
-			},
-			byScore: function(a, b) {
-				return a.score > b.score;
-			},
-			notCount: function(item) {
-				return item.__firebaseKey__ !== "count";
-			},
-			getUrl: function(game) {
-				return "https://card-app.firebaseio.com/games/" + game;
-			},
-			getUserUrl: function(url) {
-				return url  + "/users";
-			},
-			promptForUser: function() {
-				this.$.prompt.open();
 			}
 		});
 	</script>

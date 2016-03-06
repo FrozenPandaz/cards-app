@@ -1,0 +1,129 @@
+<dom-module is="game-setup">
+	<template>
+		<iron-localstorage
+			name="{{game}}"
+			value="{{user_data}}"
+			on-iron-localstorage-load-empty="promptForUser"></iron-localstorage>
+		<firebase-document
+			id="game_firebase"
+			location$="{{url}}"
+			data="{{game_data}}"></firebase-document>
+
+		<paper-dialog id="prompt">
+			<h1>Welcome to {{game_data.name}}!</h1>
+			<form is="iron-form" on-iron-form-submit="newUser">
+				<paper-input label="What is your name?" value="{{name::input}}">
+				</paper-input>
+			</form>
+		</paper-dialog>
+		<paper-dialog id="start">
+			<paper-button on-tap="startGame">Start Game</paper-button>
+		</paper-dialog>
+	</template>
+	<script>
+		Polymer({
+			is:"game-setup",
+			properties: {
+				game: String,
+				url: {
+					type: String,
+					computed: 'getUrl(game)'
+				},
+				user_data: {
+					type: Object,
+					observer: 'onUserChanged',
+					notify: true
+				},
+				started: {
+					type: Boolean,
+					notify: true,
+					computed: 'isStarted(game_data)'
+				},
+				user_id: {
+					type: String,
+					notify: true,
+					computed: 'getId(user_data)'
+				}
+			},
+			getId: function(user_data) {
+				return user_data ? user_data.id: '';
+			},
+			isStarted: function(game_data) {
+				return !!game_data.started;
+			},
+			startGame: function() {
+				var _this = this,
+					black = {
+						total: 0,
+						deck: [],
+						copy: []
+					},
+					white = {
+						total: 0,
+						deck: [],
+						copy: []
+					},
+					rand_pos;
+				(new Firebase("https://card-app.firebaseio.com/cards/")).once('value', function(snapshot) {
+					for (var card in snapshot.child('white').val()) {
+						if (card !== "count" && card !== 'existingCards') {
+							white.copy.push(card);
+						}
+					}
+					for (var card in snapshot.child('black').val()) {
+						if (card !== "count" && card !== 'existingCards') {
+							black.copy.push(card);
+						}
+					}
+
+					white.total = white.copy.length;
+					black.total = black.copy.length;
+					while (white.total > 0) {
+						rand_pos = Math.floor(Math.random()*white.total--);
+						white.deck.push(white.copy.splice(rand_pos,1)[0]);
+					}
+
+					while (black.total > 0) {
+						rand_pos = Math.floor(Math.random()*black.total--);
+						black.deck.push(black.copy.splice(rand_pos,1)[0]);
+					}
+
+					_this.$.game_firebase.query.update({
+						started: new Date().getTime(),
+						deckWhite: white.deck,
+						deckBlack: black.deck
+					});
+				});
+			},
+			onUserChanged: function() {
+				if (this.user_data) {
+					this.$.prompt.close();
+					this.$.start.open();
+				}
+			},
+			newUser: function() {
+				var count = this.game_data.users.count || 0,
+					user_id = 'user_' + count,
+					new_data = {
+						count: count + 1
+					};
+				this.set('user_data', {
+					id: user_id,
+					name: this.name,
+					cards: []
+				});
+				new_data[user_id] = {
+					name: this.name,
+					score: 0
+				};
+				this.$.game_firebase.query.child('users').update(new_data);
+			},
+			promptForUser: function() {
+				this.$.prompt.open();
+			},
+			getUrl: function(game) {
+				return 'https://card-app.firebaseio.com/games/' + game;
+			}
+		});
+	</script>
+</dom-module>
