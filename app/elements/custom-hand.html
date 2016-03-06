@@ -4,11 +4,11 @@
 			id="card_library"
 			location="https://card-app.firebaseio.com/cards/white"
 			data="{{card_library}}"></firebase-document>
-		<div>
+		<paper-material>
 			<template is="dom-repeat" items="{{cards}}" as="card_id">
 				<custom-card on-tap="playCard" id="{{card_id}}" card-text$="{{getCardText(card_id, card_library)}}" card-hidden={{cardsHidden}} animated></custom-card>
 			</template>
-		</div>
+		</paper-material>
 	</template>
 	<script>
 	//TO-DO Rename this to cards-collection or something like that
@@ -33,7 +33,8 @@
 					type: Boolean,
 					value: false,
 					notify: true
-				}
+				},
+				user: String
 			},
 			playCard: function(event) {
 				if (!this.clickable) {
@@ -41,14 +42,15 @@
 				}
 				var card_id = event.model.card_id;
 				this.arrayDelete('cards', card_id);
-				this.push('playedCards', card_id);
+				this.push('playedCards', {
+					card_id: card_id,
+					user: this.user
+				});
 			},
 			getCardText(card_id, card_library) {
-				if (card_id.value) {
-					card_id = card_id.value;
-				}
+				card_id = card_id.card_id || card_id.value || card_id;
 				return card_library[card_id].text;
-			},
+			}
 		});
 	</script>
 </dom-module>

@@ -14,7 +14,7 @@
 			height: 200px;
 		}
 		#board {
-			bottom: 250px;
+			bottom: 200px;
 			background-color: teal;
 		}
 	</style>
@@ -43,11 +43,9 @@
 				</template>
 			</ol>
 		</paper-material>
-		<custom-card black card-text="{{blackCardText}}"></custom-card>
-		<custom-hand id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-card={{pickedCards}}></custom-hand>
-		<!-- <template is="dom-if" if={{user_data.cards}}> -->
-			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} clickable></custom-hand>
-		<!-- </template> -->
+		<custom-card black class="horizontal center layout"card-text="{{blackCardText}}"></custom-card>
+		<custom-hand id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-card={{pickedCards}} user$="{{game_data.currentChooser}}"></custom-hand>
+		<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
 	</template>
 	<script>
 		Polymer({
@@ -107,10 +105,17 @@
 				'cardPlayedOnBoard(game_data.cardsPlayed.splices)'
 			],
 			phaseChanged: function() {
-				if (this.phase == 'choose') {
-					this.$.board.clickable = true;
-					this.$.hand.clickable = false;
-					this.$.board.cardsHidden = false;
+				console.log(this.phase);
+				if (this.phase === 'choose') {
+					this.$.hand.clickable = this.$.board.cardsHidden = false;
+					if (this.user_id === this.game_data.currentChooser) {
+						this.$.board.clickable = true;
+					} else {
+						this.drawHand();
+					}
+				} else if (this.phase === 'pick') {
+					this.$.hand.clickable = this.$.board.cardsHidden = true;
+					this.$.hand.clickable = (this.user_id === this.game_data.currentChooser ? false : true);
 				}
 			},
 			getPhase: function(game_data) {
@@ -124,7 +129,7 @@
 					return;
 				}
 				var black_fields = 1;
-				if (this.game_data.cardsPlayed.length >= ((this.users.length - 1) * black_fields)) {
+				if (this.game_data.cardsPlayed.length >= ((this.users.length - 2) * black_fields)) { // Minus 1 for the count and 1 for the current Chooser
 					this.setPhase('choose');
 				}
 			},

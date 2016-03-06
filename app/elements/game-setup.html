@@ -91,7 +91,9 @@
 					_this.$.game_firebase.query.update({
 						started: new Date().getTime(),
 						deckWhite: white.deck,
-						deckBlack: black.deck
+						deckBlack: black.deck,
+						currentChooser: _this.user_id,
+						phase: 'pick'
 					});
 				});
 			},
