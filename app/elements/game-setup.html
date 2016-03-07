@@ -63,7 +63,8 @@
 						deck: [],
 						copy: []
 					},
-					rand_pos;
+					rand_pos,
+					blackCard;
 				(new Firebase("https://card-app.firebaseio.com/cards/")).once('value', function(snapshot) {
 					for (var card in snapshot.child('white').val()) {
 						if (card !== "count" && card !== 'existingCards') {
@@ -88,11 +89,14 @@
 						black.deck.push(black.copy.splice(rand_pos,1)[0]);
 					}
 
+					blackCard = snapshot.child('black').val()[black.deck.pop()];
+
 					_this.$.game_firebase.query.update({
 						started: new Date().getTime(),
 						deckWhite: white.deck,
 						deckBlack: black.deck,
 						currentChooser: _this.user_id,
+						currentBlackCard: blackCard,
 						phase: 'pick'
 					});
 				});

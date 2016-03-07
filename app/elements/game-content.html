@@ -47,7 +47,7 @@
 				</template>
 			</ol>
 		</paper-material>
-		<custom-card black card-text="{{blackCardText}}"></custom-card>
+		<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
 		<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
 		<custom-hand id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} user$="{{game_data.currentChooser}}"></custom-hand>
 		<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
@@ -110,28 +110,35 @@
 				'cardPicked(pickedCards.splices)'
 			],
 			cardPicked: function(splices) {
-				console.log('card picked');
 				if (!this.pickedCards || this.pickedCards.length < 1 || !this.pickedCards[0]) {
 					return;
 				}
 
+				var deck = this.game_data.deckBlack,
+					card = deck.pop();
+
+				(new Firebase("https://card-app.firebaseio.com/cards/black/")).once('value', function(snapshot) {
+					card = snapshot.child(card).val();
+				});
+
 				this.$.game_firebase.query.update({
 					currentChooser: this.getNextUser(),
-					phase: "pick"
+					phase: "pick",
+					currentBlackCard: card
 				});
 				this.addPoints(this.pickedCards[0].user);
-				console.log(this.game_data.cardsPlayed);
+				this.$.game_firebase.query.child('deckBlack').set(deck);
 				this.$.game_firebase.query.child('cardsPlayed').set([]);
 			},
 			cardPlayed: function(splices) {
-				console.log('card played');
 				if (!this.playedCards || this.playedCards.length < 1) {
 					return;
 				}
-				var played = this.game_data.cardsPlayed || [];
+				var played = this.game_data.cardsPlayed || [],
+					black_fields = this.game_data.currentBlackCard.response_count;
+
 				played.push(this.playedCards[this.playedCards.length -1]);
 				this.$.game_firebase.query.child('cardsPlayed').set(played);
-				var black_fields = 1;
 				if (this.playedCards.length >= black_fields) {
 					this.$.hand.clickable = false;
 				}
