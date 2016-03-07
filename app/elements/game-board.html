@@ -1,0 +1,87 @@
+<dom-module is="game-board">
+	<style>
+		paper-material paper-material {
+			display: inline-block;
+			background-color: lightcoral;
+			height: 200px;
+			margin: 10px 10px;
+			padding: 0 20px;
+		}
+	</style>
+	<template>
+		<firebase-document
+			id="card_library"
+			location="https://card-app.firebaseio.com/cards/white"
+			data="{{card_library}}"></firebase-document>
+		<paper-material>
+			<template is="dom-repeat" items="{{organizedCards}}" as="user">
+				<paper-material on-tap="onTap">
+					<template is="dom-repeat" items="{{user.cards}}" as="card">
+						<custom-card on-tap="playCard" id="{{card}}" card-text$="{{getCardText(card, card_library)}}" card-hidden={{cardsHidden}} animated></custom-card>
+					</template>
+				</paper-material>
+			</template>
+		</paper-material>
+	</template>
+	<script>
+	//TO-DO Rename this to cards-collection or something like that
+		Polymer({
+			is:"game-board",
+			properties: {
+				cards: {
+					type: Array,
+					notify: true
+				},
+				card_library: Object,
+				playedCards: {
+					type: Array,
+					notify: true,
+					readOnly: true,
+					value: []
+				},
+				organizedCards: {
+					type: Array,
+					computed: 'organize(cards)'
+				},
+				clickable: {
+					type: Boolean
+				},
+				cardsHidden: {
+					type: Boolean,
+					value: false,
+					notify: true
+				}
+			},
+			observers: [
+				// 'onCardPlayed(playedCards.splices)'
+			],
+			organize: function(cards) {
+				var organized = [],
+					hashmap = {};
+				for (var card in cards) {
+					if (!hashmap[cards[card].user]) {
+						hashmap[cards[card].user] = {
+							id: cards[card].user,
+							cards: []
+						}
+					}
+					hashmap[cards[card].user].cards.push(cards[card]);
+				}
+				for (var user in hashmap) {
+					organized.push(hashmap[user]);
+				}
+				return organized;
+			},
+			onTap: function(e) {
+				console.log(e.model.user.id);
+			},
+			onCardPlayed() {
+				console.log(this.playedCards);
+			},
+			getCardText(card_id, card_library) {
+				card_id = card_id.card_id || card_id.value || card_id;
+				return card_library[card_id].text;
+			}
+		});
+	</script>
+</dom-module>

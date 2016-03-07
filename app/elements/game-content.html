@@ -6,7 +6,8 @@
 			margin-right: 20px;
 			margin-top: 20px;
 		}
-		custom-hand {
+		custom-hand,
+		#board {
 			display: block;
 			position: absolute;
 			bottom: 0px;
@@ -19,6 +20,7 @@
 			display: inline-block;
 		}
 		#board {
+			height: 220px;
 			bottom: 200px;
 			background-color: teal;
 		}
@@ -54,7 +56,7 @@
 		</paper-material>
 		<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
 		<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
-		<custom-hand id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} user$="{{game_data.currentChooser}}"></custom-hand>
+		<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}}></game-board>
 		<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
 	</template>
 	<script>
