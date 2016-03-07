@@ -45,12 +45,6 @@
 					computed: 'getId(user_data)'
 				}
 			},
-			getId: function(user_data) {
-				return user_data ? user_data.id: '';
-			},
-			isStarted: function(game_data) {
-				return !!game_data.started;
-			},
 			startGame: function() {
 				var _this = this,
 					black = {
@@ -102,7 +96,7 @@
 				});
 			},
 			onUserChanged: function() {
-				if (this.user_data) {
+				if (this.user_data && this.user_data.id) {
 					this.$.prompt.close();
 					this.$.start.open();
 				}
@@ -123,6 +117,12 @@
 					score: 0
 				};
 				this.$.game_firebase.query.child('users').update(new_data);
+			},
+			getId: function(user_data) {
+				return user_data ? user_data.id: '';
+			},
+			isStarted: function(game_data) {
+				return !!game_data.started;
 			},
 			promptForUser: function() {
 				this.$.prompt.open();
