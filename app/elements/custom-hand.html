@@ -6,7 +6,7 @@
 			data="{{card_library}}"></firebase-document>
 		<paper-material>
 			<template is="dom-repeat" items="{{cards}}" as="card_id">
-				<custom-card on-tap="playCard" id="{{card_id}}" class$={{card_id.user}} card-text$="{{getCardText(card_id, card_library)}}" card-hidden={{cardsHidden}} on-mouseover="onHover" animated></custom-card>
+				<custom-card on-tap="playCard" id="{{card_id}}" class$={{card_id.user}} card-text$="{{getCardText(card_id, card_library)}}" card-hidden={{cardsHidden}} animated></custom-card>
 			</template>
 		</paper-material>
 	</template>
@@ -50,10 +50,6 @@
 			getCardText(card_id, card_library) {
 				card_id = card_id.card_id || card_id.value || card_id;
 				return card_library[card_id].text;
-			},
-			onHover: function(e) {
-				var user = e.model.card_id.user;
-				console.log(this.$$('.' + user));
 			}
 		});
 	</script>

@@ -33,11 +33,9 @@
 					notify: true
 				},
 				card_library: Object,
-				playedCards: {
-					type: Array,
-					notify: true,
-					readOnly: true,
-					value: []
+				winner: {
+					type: String,
+					notify: true
 				},
 				organizedCards: {
 					type: Array,
@@ -52,9 +50,6 @@
 					notify: true
 				}
 			},
-			observers: [
-				// 'onCardPlayed(playedCards.splices)'
-			],
 			organize: function(cards) {
 				var organized = [],
 					hashmap = {};
@@ -73,10 +68,7 @@
 				return organized;
 			},
 			onTap: function(e) {
-				console.log(e.model.user.id);
-			},
-			onCardPlayed() {
-				console.log(this.playedCards);
+				this.winner = e.model.user.id;
 			},
 			getCardText(card_id, card_library) {
 				card_id = card_id.card_id || card_id.value || card_id;

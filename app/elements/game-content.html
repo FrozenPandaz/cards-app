@@ -56,7 +56,7 @@
 		</paper-material>
 		<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
 		<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
-		<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}}></game-board>
+		<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} winner={{winner}}></game-board>
 		<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
 	</template>
 	<script>
@@ -108,16 +108,16 @@
 					computed: 'getPhase(game_data)',
 					observer: 'phaseChanged'
 				},
-				pickedCards: {
-					type: Array
+				winner: {
+					type: String,
+					observer: 'winnerChosen'
 				}
 			},
 			observers: [
-				'cardPlayed(playedCards.splices)',
-				'cardPicked(pickedCards.splices)'
+				'cardPlayed(playedCards.splices)'
 			],
-			cardPicked: function(splices) {
-				if (!this.pickedCards || this.pickedCards.length < 1 || !this.pickedCards[0]) {
+			winnerChosen: function() {
+				if (!this.winner) {
 					return;
 				}
 
@@ -133,7 +133,7 @@
 					phase: "pick",
 					currentBlackCard: card
 				});
-				this.addPoints(this.pickedCards[0].user);
+				this.addPoints(this.winner);
 				this.$.game_firebase.query.child('deckBlack').set(deck);
 				this.$.game_firebase.query.child('cardsPlayed').set([]);
 			},
