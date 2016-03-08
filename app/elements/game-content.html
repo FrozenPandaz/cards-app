@@ -120,6 +120,7 @@
 				if (!this.winner) {
 					return;
 				}
+				this.addPoints(this.winner);
 
 				var deck = this.game_data.deckBlack,
 					card = deck.pop();
@@ -133,7 +134,6 @@
 					phase: "pick",
 					currentBlackCard: card
 				});
-				this.addPoints(this.winner);
 				this.$.game_firebase.query.child('deckBlack').set(deck);
 				this.$.game_firebase.query.child('cardsPlayed').set([]);
 			},
