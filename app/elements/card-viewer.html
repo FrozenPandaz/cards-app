@@ -78,7 +78,7 @@
 				return black ? 'black' : 'white';
 			},
 			notCount: function(data) {
-				return data.__firebaseKey__ !== 'count';
+				return data.__firebaseKey__ !== 'count' && data.__firebaseKey__ !== "existingCards";
 			}
 		})
 	</script>
