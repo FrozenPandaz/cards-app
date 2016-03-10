@@ -25,13 +25,13 @@
 		<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
 		<iron-pages selected="{{type}}" attr-for-selected="id">
 			<span id="white">
-				<template is="dom-repeat" items="{{white-cards}}" filter=notCount>
+				<template is="dom-repeat" items="{{white-cards}}" filter=notCount initialCount=20 targetFramerate=60>
 					<custom-card class="white" card-text="{{item.text}}" id="{{item.__firebaseKey__}}"></custom-card>
 				</template>
 			</span>
 
 			<span id="black">
-				<template is="dom-repeat" items="{{black-cards}}" filter=notCount>
+				<template is="dom-repeat" items="{{black-cards}}" filter=notCount initialCount=20 targetFramerate=60>
 					<custom-card black card-text="{{item.text}}" id="{{item.__firebaseKey__}}"></custom-card>
 				</template>
 			</span>

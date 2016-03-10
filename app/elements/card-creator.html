@@ -88,23 +88,25 @@
 				}
 			},
 			submitForm: function() {
-				this.addCard(this.cardText, this.black ? 'black' : 'white');
-				this.$.form.reset();
+				this.addCard(this.cardText, this.black ? 'black' : 'white', source);
+				this.cardText = null;
 			},
-			addCard: function(text, type) {
+			addCard: function(text, type, source) {
 				var firebase = this.$.firebase,
 					count = firebase.data && firebase.data[type] && firebase.data[type].count ? firebase.data[type].count : 0,
 					existing_cards = firebase.data[type].existingCards || '',
 					card = this.black ? {
 						text: text,
 						black: true,
-						response_count: this.cardText.split(/_/).length - 1,
+						source: source,
+						response_count: this.cardText.split(/_/).length - 1 || 1,
 						stats: {
 							play_count: 0
 						}
 					} : {
 						text: text,
 						black: false,
+						source: source,
 						stats: {
 							draw_count: 0,
 							play_count: 0,
