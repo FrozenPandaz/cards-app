@@ -82,6 +82,9 @@
 				return this.animated ? this.playAnimation('entry') : false;
 			},
 			parseText: function(cardText) {
+				if (!cardText) {
+					return cardText;
+				}
 				return cardText.replace(/_/g,'________');
 			},
 			getType: function(black) {

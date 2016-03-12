@@ -122,6 +122,9 @@
 				return user_data ? user_data.id: '';
 			},
 			isStarted: function(game_data) {
+				if (!game_data) {
+					return false;
+				}
 				return !!game_data.started;
 			},
 			promptForUser: function() {

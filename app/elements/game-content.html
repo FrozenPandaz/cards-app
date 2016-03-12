@@ -190,6 +190,9 @@
 				}
 			},
 			getPhase: function(game_data) {
+				if (!game_data) {
+					return null;
+				}
 				return game_data.phase;
 			},
 			setPhase: function(phase) {
