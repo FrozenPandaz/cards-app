@@ -60,7 +60,7 @@
 			data="{{users}}"></firebase-collection>
 		<div class="game-container">
 			<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
-			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
+			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}"></custom-hand>
 			<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} winner={{winner}}></game-board>
 			<div class="misc-container">
 				<paper-material>
@@ -72,7 +72,7 @@
 				</paper-material>
 				<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
 				<h3 class="choser">
-					{{game_data.currentChooser.name}} is choosing
+					[[phase]] {{game_data.currentChooser.name}} is choosing
 				</h3>
 			</div>
 		</div>
@@ -115,8 +115,7 @@
 					type: Array
 				},
 				cardsHidden: {
-					type: Boolean,
-					value: true
+					type: Boolean
 				},
 				blackCardText: {
 					type: String
@@ -197,13 +196,14 @@
 			phaseChanged: function() {
 				if (this.phase === 'choose') {
 					this.$.hand.clickable = this.$.board.cardsHidden = false;
-					this.$.board.clickable = this.isCurrentChooser() ? true : false;
+					this.$.board.clickable = this.isCurrentChooser();
 					if (!this.isCurrentChooser()) {
 						this.drawHand();
 					}
 				} else if (this.phase === 'pick') {
-					this.$.hand.clickable = this.$.board.cardsHidden = true;
-					this.$.board.clickable = (this.isCurrentChooser() ? false : true);
+					this.$.board.cardsHidden = true;
+					this.$.board.clickable = false;
+					this.$.hand.clickable = !this.isCurrentChooser();
 				}
 			},
 			isCurrentChooser: function() {

@@ -16,7 +16,7 @@
 			<template is="dom-repeat" items="{{organizedCards}}" as="user">
 				<paper-material on-tap="onTap">
 					<template is="dom-repeat" items="{{user.cards}}" as="card">
-						<custom-card on-tap="playCard" id="{{card}}" card-text$="{{getCardText(card, card_library)}}" card-hidden={{cardsHidden}} animated></custom-card>
+						<custom-card on-tap="playCard" card-text$="{{getCardText(card, card_library)}}" card-hidden={{cardsHidden}} animated></custom-card>
 					</template>
 				</paper-material>
 			</template>
@@ -67,6 +67,9 @@
 				return organized;
 			},
 			onTap: function(e) {
+				if (!this.clickable) {
+					return;
+				}
 				this.winner = e.model.user.id;
 			},
 			getCardText(card_id, card_library) {
