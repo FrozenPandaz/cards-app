@@ -13,19 +13,21 @@
 			bottom: 0px;
 			background-color: grey;
 			width: 100%;
-			height: 200px;
+			height: 245px;
 		}
 		paper-material {
 			width: 300px;
 			display: inline-block;
 		}
 		#board {
-			height: 220px;
-			bottom: 200px;
+			bottom: 240px;
 			background-color: teal;
 		}
-		#chosen {
-			bottom: 400px;
+		.choser {
+			position: absolute;
+			bottom: 480px;
+			width: 100%;
+			text-align: center;
 			background-color: yellow;
 		}
 	</style>
@@ -46,8 +48,6 @@
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
 		<paper-material>
-			{{game_data.currentChooser}} is choosing <br>
-			It is {{game_data.phase}} phase
 			<ol>
 				<template is="dom-repeat" items="[[users]]" filter="notCount" sort="byScore">
 					<paper-item>[[item.name]] : [[item.score]]</paper-item>
@@ -55,6 +55,9 @@
 			</ol>
 		</paper-material>
 		<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
+		<h3 class="choser">
+			{{game_data.currentChooser.name}} is choosing
+		</h3>
 		<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
 		<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} winner={{winner}}></game-board>
 		<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
@@ -179,15 +182,17 @@
 			phaseChanged: function() {
 				if (this.phase === 'choose') {
 					this.$.hand.clickable = this.$.board.cardsHidden = false;
-					if (this.user_id === this.game_data.currentChooser) {
-						this.$.board.clickable = true;
-					} else {
+					this.$.board.clickable = this.isCurrentChooser() ? true : false;
+					if (!this.isCurrentChooser()) {
 						this.drawHand();
 					}
 				} else if (this.phase === 'pick') {
 					this.$.hand.clickable = this.$.board.cardsHidden = true;
-					this.$.hand.clickable = (this.user_id === this.game_data.currentChooser ? false : true);
+					this.$.board.clickable = (this.isCurrentChooser() ? false : true);
 				}
+			},
+			isCurrentChooser: function() {
+				return this.user_id === this.game_data.currentChooser.id
 			},
 			getPhase: function(game_data) {
 				if (!game_data) {
@@ -198,15 +203,16 @@
 			setPhase: function(phase) {
 				this.$.game_firebase.query.child('phase').set(phase);
 			},
-			setChooser: function(user_id) {
-				this.$.game_firebase.query.child('currentChooser').set(user_id);
+			setChooser: function(user) {
+				this.$.game_firebase.query.child('currentChooser').set(user);
 				return user_id;
 			},
 			getNextUser: function() {
 				for (var i = 0; i < this.users.length; i++) {
-					if (this.users[i].__firebaseKey__ === this.game_data.currentChooser) {
-						var user = (i <= (this.users.length - 2)) ? this.users[i+1].__firebaseKey__ : this.users[1].__firebaseKey__;
-						return user;
+					if (this.users[i].__firebaseKey__ === this.game_data.currentChooser.id) {
+						var user_id = (i <= (this.users.length - 2)) ? this.users[i+1].__firebaseKey__ : this.users[1].__firebaseKey__;
+						this.game_data.users[user_id].id = user_id;
+						return this.game_data.users[user_id];
 					}
 				}
 			},

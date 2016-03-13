@@ -102,7 +102,7 @@
 					card = this.black ? {
 						text: text,
 						black: true,
-						response_count: this.cardText.split(/_/).length - 1 || 1,
+						response_count: text.split(/_/).length - 1 || 1,
 						stats: {
 							play_count: 0
 						}
