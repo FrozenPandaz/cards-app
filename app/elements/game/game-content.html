@@ -1,34 +1,45 @@
 <dom-module is="game-content">
 	<style>
-		custom-card {
-			position: relative;
+		.game-container {
+			overflow: hidden;
+		}
+		.misc-container {
 			float: right;
-			margin-right: 20px;
-			margin-top: 20px;
+			position: relative;
+			height: 100%;
+			width: 50%;
+		}
+		custom-card {
+			position: absolute;
+			top: 0px;
+			right: 20px;
 		}
 		custom-hand,
 		#board {
 			display: block;
-			position: absolute;
-			bottom: 0px;
+			position: relative;
+			float: right;
 			background-color: grey;
-			width: 100%;
-			height: 245px;
+			width: 230px;
+			height: 100%;
+			text-align: center;
+			overflow-y: auto;
 		}
 		paper-material {
-			width: 300px;
+			width: 50%;
 			display: inline-block;
+			float: left;
 		}
 		#board {
-			bottom: 240px;
 			background-color: teal;
 		}
 		.choser {
 			position: absolute;
-			bottom: 480px;
 			width: 100%;
+			bottom: 0px;
 			text-align: center;
 			background-color: yellow;
+			margin: 0;
 		}
 	</style>
 	<template>
@@ -47,20 +58,24 @@
 			id="user_firebase"
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
-		<paper-material>
-			<ol>
-				<template is="dom-repeat" items="[[users]]" filter="notCount" sort="byScore">
-					<paper-item>[[item.name]] : [[item.score]]</paper-item>
-				</template>
-			</ol>
-		</paper-material>
-		<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
-		<h3 class="choser">
-			{{game_data.currentChooser.name}} is choosing
-		</h3>
-		<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
-		<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} winner={{winner}}></game-board>
-		<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
+		<div class="game-container">
+			<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
+			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}" clickable></custom-hand>
+			<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} winner={{winner}}></game-board>
+			<div class="misc-container">
+				<paper-material>
+					<ol>
+						<template is="dom-repeat" items="[[users]]" filter="notCount" sort="byScore">
+							<paper-item>[[item.name]] : [[item.score]]</paper-item>
+						</template>
+					</ol>
+				</paper-material>
+				<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
+				<h3 class="choser">
+					{{game_data.currentChooser.name}} is choosing
+				</h3>
+			</div>
+		</div>
 	</template>
 	<script>
 		Polymer({
