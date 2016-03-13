@@ -2,22 +2,24 @@
 	<style>
 
 		paper-material {
-			padding: 20px;
 			elevation: 2;
 			display: inline-block;
 			width: 100%;
-			min-height: 80px;
+		}
+		.inner-container: {
+			padding: 20px;
 		}
 		h1 {
 			display: inline-block;
 			width: 6em;
+			float: right;
 		}
 		form {
 			position: relative;
 			padding: 40px;
 			display: block;
-			float: right;
-			width: 60%;
+			float: left;
+			width: 30%;
 		}
 		paper-toggle-button {
 			float: right;
@@ -27,7 +29,7 @@
 			display: inline-block;
 		}
 		paper-input {
-			display: inline-block;
+			display: block;
 		}
 		custom-card {
 			display: inline-block;
@@ -52,17 +54,19 @@
 			location="https://card-app.firebaseio.com/cards"
 			data="{{data}}"></firebase-document>
 		<paper-material>
-			<h1>Submit your own Cards</h1><paper-button on-tap="clearCards">x</paper-button>
-			<form is="iron-form" id="form" action="/" target="_self" on-iron-form-submit="submitForm" on-iron-form-reset="resetForm">
-				<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
-				<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card" value="{{cardText::input}}"></paper-input>
-				<paper-button raised type="submit" on-tap="submitForm">Submit</paper-button>
-			</form>
+			<div class="container">
+				<h1>Submit your own Cards</h1><!-- <paper-button on-tap="clearCards">x</paper-button> -->
+				<form is="iron-form" id="form" action="/" target="_self" on-iron-form-submit="submitForm" on-iron-form-reset="resetForm">
+					White or Black?<paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button>
+					<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card Text" value="{{cardText::input}}"></paper-input>
+					<paper-button raised type="submit" on-tap="submitForm">Submit</paper-button>
+				</form>
+			</div>
 		</paper-material>
+		<custom-card black$="{{black}}" card-text=[[cardText]]></custom-card>
 		<template is="dom-repeat" items="{{createdCards}}">
 			<custom-card black$="{{item.black}}" card-text=[[item.text]]></custom-card>
 		</template>
-		<custom-card black$="{{black}}" card-text=[[cardText]]></custom-card>
 	</template>
 	<script>
 		Polymer({
@@ -88,17 +92,16 @@
 				}
 			},
 			submitForm: function() {
-				this.addCard(this.cardText, this.black ? 'black' : 'white', source);
+				this.addCard(this.cardText, this.black ? 'black' : 'white');
 				this.cardText = null;
 			},
-			addCard: function(text, type, source) {
+			addCard: function(text, type) {
 				var firebase = this.$.firebase,
 					count = firebase.data && firebase.data[type] && firebase.data[type].count ? firebase.data[type].count : 0,
 					existing_cards = firebase.data[type].existingCards || '',
 					card = this.black ? {
 						text: text,
 						black: true,
-						source: source,
 						response_count: this.cardText.split(/_/).length - 1 || 1,
 						stats: {
 							play_count: 0
@@ -106,7 +109,6 @@
 					} : {
 						text: text,
 						black: false,
-						source: source,
 						stats: {
 							draw_count: 0,
 							play_count: 0,
