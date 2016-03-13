@@ -57,6 +57,7 @@
 						deck: [],
 						copy: []
 					},
+					user,
 					rand_pos,
 					blackCard;
 				(new Firebase("https://card-app.firebaseio.com/cards/")).once('value', function(snapshot) {
@@ -85,11 +86,14 @@
 
 					blackCard = snapshot.child('black').val()[black.deck.pop()];
 
+					user = _this.game_data.users[_this.user_id]
+					user.id = _this.user_id;
+
 					_this.$.game_firebase.query.update({
 						started: new Date().getTime(),
 						deckWhite: white.deck,
 						deckBlack: black.deck,
-						currentChooser: _this.user_id,
+						currentChooser: user,
 						currentBlackCard: blackCard,
 						phase: 'pick'
 					});
