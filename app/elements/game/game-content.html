@@ -20,7 +20,8 @@
 			position: relative;
 			float: right;
 			background-color: grey;
-			width: 230px;
+			min-width: 230px;
+			width: 25%;
 			height: 100%;
 			text-align: center;
 			overflow-y: auto;
@@ -61,7 +62,7 @@
 		<div class="game-container">
 			<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
 			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}"></custom-hand>
-			<game-board id="board" cards={{game_data.cardsPlayed}} cards-hidden={{cardsHidden}} played-cards={{pickedCards}} winner={{winner}}></game-board>
+			<game-board id="board" cards={{game_data.cardsPlayed}} played-cards={{pickedCards}} winner={{winner}}></game-board>
 			<div class="misc-container">
 				<paper-material>
 					<ol>
@@ -113,9 +114,6 @@
 				},
 				cardsPlayed: {
 					type: Array
-				},
-				cardsHidden: {
-					type: Boolean
 				},
 				blackCardText: {
 					type: String
