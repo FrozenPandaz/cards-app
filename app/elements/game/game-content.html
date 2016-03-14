@@ -26,16 +26,17 @@
 			text-align: center;
 			overflow-y: auto;
 		}
+		#board {
+			background-color: teal;
+		}
 		paper-material {
 			width: 50%;
 			display: inline-block;
 			float: left;
 		}
-		#board {
-			background-color: teal;
-		}
 		.choser {
 			position: absolute;
+			font-size: 3em;
 			width: 100%;
 			bottom: 0px;
 			text-align: center;
@@ -73,7 +74,7 @@
 				</paper-material>
 				<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
 				<h3 class="choser">
-					[[phase]] {{game_data.currentChooser.name}} is choosing
+					[[game_data.currentChooser.name]] is choosing
 				</h3>
 			</div>
 		</div>
