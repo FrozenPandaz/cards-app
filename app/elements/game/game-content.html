@@ -138,6 +138,7 @@
 					return;
 				}
 				this.addPoints(this.winner);
+				this.winner = "";
 
 				var deck = this.game_data.deckBlack,
 					card = deck.pop();
@@ -195,6 +196,7 @@
 			},
 			phaseChanged: function() {
 				if (this.phase === 'choose') {
+					this.set('playedCards', []);
 					this.$.hand.clickable = this.$.board.cardsHidden = false;
 					this.$.board.clickable = this.isCurrentChooser();
 					if (!this.isCurrentChooser()) {
