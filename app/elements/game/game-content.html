@@ -195,7 +195,7 @@
 					card = deck.splice(0,1)[0],
 					firebase_query = this.$.game_firebase.query,
 					lock = firebase_query.child('lock'),
-					lock2 = firebase_query.child('lock');
+					lock2 = firebase_query.child('lock2');
 
 				if (this.game_data.lock || this.game_data.lock2 || this.drawing) {
 					setTimeout(function() {
@@ -203,7 +203,6 @@
 					}, 20);
 					return;
 				} else {
-					console.log('start');
 					this.drawing = true;
 					lock.set(true).then(function() {
 						lock2.set(true).then(function() {
