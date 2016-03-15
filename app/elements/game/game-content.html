@@ -61,7 +61,6 @@
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
 		<div class="game-container">
-			<!-- <custom-hand id="chosen" cards={{game_data.cardsChosen}}></custom-hand> -->
 			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}"></custom-hand>
 			<game-board id="board" cards={{game_data.cardsPlayed}} played-cards={{pickedCards}} winner={{winner}}></game-board>
 			<div class="misc-container">
