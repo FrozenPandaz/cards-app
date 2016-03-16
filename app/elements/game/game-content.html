@@ -202,7 +202,8 @@
 					return;
 				} else {
 					this.drawing = true;
-					lock.set(_this.user_id).then(function() {
+					lock.set(_this.user_id)
+					.then(function() {
 						setTimeout(function() {
 							if (_this.game_data.lock !== _this.user_id) {
 								_this.drawCard();
@@ -210,10 +211,12 @@
 								return;
 							}
 							_this.push('user_data.cards', card);
-							firebase_query.child('deckWhite').set(deck).then(function() {
-								lock.set(false).then(function() {
-									_this.drawing = false;
-								});
+							firebase_query.child('deckWhite').set(deck)
+							.then(function() {
+								return lock.set(false)
+							})
+							.then(function() {
+								_this.drawing = false;
 							});
 						}, 100);
 					});
