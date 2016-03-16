@@ -186,34 +186,36 @@
 						return;
 					}
 					_this.drawCard();
-				}, 200);
+				}, 60);
 			},
 			drawCard: function() {
 				var _this = this,
 					deck = this.game_data.deckWhite,
 					card = deck.splice(0,1)[0],
 					firebase_query = this.$.game_firebase.query,
-					lock = firebase_query.child('lock'),
-					lock2 = firebase_query.child('lock2');
+					lock = firebase_query.child('lock');
 
-				if (this.game_data.lock || this.game_data.lock2 || this.drawing) {
+				if (this.game_data.lock || this.drawing) {
 					setTimeout(function() {
 						_this.drawCard();
 					}, 20);
 					return;
 				} else {
 					this.drawing = true;
-					lock.set(true).then(function() {
-						lock2.set(true).then(function() {
+					lock.set(_this.user_id).then(function() {
+						setTimeout(function() {
+							if (_this.game_data.lock !== _this.user_id) {
+								_this.drawCard();
+								_this.drawing = false;
+								return;
+							}
 							_this.push('user_data.cards', card);
 							firebase_query.child('deckWhite').set(deck).then(function() {
 								lock.set(false).then(function() {
-									lock2.set(false).then(function() {
-										_this.drawing = false;
-									});
+									_this.drawing = false;
 								});
 							});
-						});
+						}, 100);
 					});
 				}
 			},
