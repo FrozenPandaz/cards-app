@@ -173,20 +173,9 @@
 				this.$$('iron-localstorage').reload();
 			},
 			drawHand: function() {
-				var _this = this,
-					interval,
-					count = this.user_data.cards.length || 0;
-
-				interval = setInterval(function(){
-					if (!_this.user_data || !_this.game_data) {
-						return;
-					}
-					if (count++ >= 7) {
-						clearInterval(interval);
-						return;
-					}
-					_this.drawCard();
-				}, 60);
+				for (var i = this.user_data.cards.length || 0; i <= 7; i++) {
+					this.drawCard();
+				}
 			},
 			drawCard: function() {
 				var _this = this,
