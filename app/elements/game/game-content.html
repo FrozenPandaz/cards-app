@@ -15,7 +15,7 @@
 			right: 20px;
 		}
 		custom-hand,
-		#board {
+		game-board {
 			display: block;
 			position: relative;
 			float: right;
@@ -26,7 +26,7 @@
 			text-align: center;
 			overflow-y: auto;
 		}
-		#board {
+		game-board {
 			background-color: teal;
 		}
 		paper-material {
@@ -42,6 +42,44 @@
 			text-align: center;
 			background-color: yellow;
 			margin: 0;
+		}
+
+		@media (max-width:600px) {
+			custom-hand,
+			game-board {
+				width: 100%;
+				height: 92.5%;
+			}
+			paper-tabs {
+				height: 7.5%;
+				width: 100%;
+				position: absolute;
+				bottom: 0px;
+			}
+			.misc-container {
+				width: 100%;
+				text-align: center;
+			}
+			paper-material {
+				width: 100%;
+				display block;
+				float: left;
+			}
+
+			custom-card {
+				display: block;
+				margin: auto;
+				right: 0px;
+				position: relative;
+				text-align: center;
+			}
+
+			.choser {
+				font-size: 1.4em;
+				position: relative;
+				top: 0;
+				bottom: auto;
+			}
 		}
 	</style>
 	<template>
@@ -60,23 +98,50 @@
 			id="user_firebase"
 			location$="{{user_url}}"
 			data="{{users}}"></firebase-collection>
-		<div class="game-container">
-			<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}"></custom-hand>
-			<game-board id="board" cards={{game_data.cardsPlayed}} played-cards={{pickedCards}} winner={{winner}}></game-board>
-			<div class="misc-container">
-				<paper-material>
-					<ol>
-						<template is="dom-repeat" items="[[users]]" filter="notCount" sort="byScore">
-							<paper-item>[[item.name]] : [[item.score]]</paper-item>
-						</template>
-					</ol>
-				</paper-material>
-				<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
-				<h3 class="choser">
-					[[game_data.currentChooser.name]] is choosing
-				</h3>
+		<iron-media-query id="mq" query="(max-width: 600px)" query-matches="{{queryMatches}}"></iron-media-query>
+		<template is="dom-if" if={{queryMatches}}>
+			<iron-pages attr-for-selected="id" selected="[[selected]]" id="mobile-pages">
+				<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}"></custom-hand>
+				<game-board id="board" cards={{game_data.cardsPlayed}} played-cards={{pickedCards}} winner={{winner}}></game-board>
+				<div id="misc" class="misc-container">
+					<h3 class="choser">
+						[[game_data.currentChooser.name]] is choosing
+					</h3>
+					<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
+					<paper-material>
+						<ol>
+							<template is="dom-repeat" items="[[users]]" filter="notCount" sort="byScore">
+								<paper-item>[[item.name]] : [[item.score]]</paper-item>
+							</template>
+						</ol>
+					</paper-material>
+				</div>
+			</iron-pages>
+			<paper-tabs selected={{selected}} attr-for-selected="view">
+				<paper-tab view="misc">Current</paper-tab>
+				<paper-tab view="board">Board</paper-tab>
+				<paper-tab view="hand">Hand</paper-tab>
+			</paper-tabs>
+		</template>
+		<template is="dom-if" if={{!queryMatches}}>
+			<div class="game-container">
+				<custom-hand id="hand" cards={{user_data.cards}} played-cards={{playedCards}} user$="{{user_id}}"></custom-hand>
+				<game-board id="board" cards={{game_data.cardsPlayed}} played-cards={{pickedCards}} winner={{winner}}></game-board>
+				<div class="misc-container">
+					<paper-material>
+						<ol>
+							<template is="dom-repeat" items="[[users]]" filter="notCount" sort="byScore">
+								<paper-item>[[item.name]] : [[item.score]]</paper-item>
+							</template>
+						</ol>
+					</paper-material>
+					<custom-card black card-text="{{game_data.currentBlackCard.text}}"></custom-card>
+					<h3 class="choser">
+						[[game_data.currentChooser.name]] is choosing
+					</h3>
+				</div>
 			</div>
-		</div>
+		</template>
 	</template>
 	<script>
 		Polymer({
@@ -93,6 +158,10 @@
 				},
 				user_id: {
 					type: String
+				},
+				selected: {
+					type: String,
+					value: "misc"
 				},
 				users: {
 					type: Array
@@ -163,7 +232,7 @@
 				played.push(this.playedCards[this.playedCards.length -1]);
 				this.$.game_firebase.query.child('cardsPlayed').set(played);
 				if (this.playedCards.length >= black_fields) {
-					this.$.hand.clickable = false;
+					this.$$('custom-hand').clickable = false;
 				}
 				if (played.length >= ((this.users.length - 2) * black_fields)) { // Minus 1 for the count and 1 for the current Chooser
 					this.setPhase('choose');
@@ -214,15 +283,15 @@
 			phaseChanged: function() {
 				if (this.phase === 'choose') {
 					this.set('playedCards', []);
-					this.$.hand.clickable = this.$.board.cardsHidden = false;
-					this.$.board.clickable = this.isCurrentChooser();
+					this.$$('custom-hand').clickable = this.$$('game-board').cardsHidden = false;
+					this.$$('game-board').clickable = this.isCurrentChooser();
 					if (!this.isCurrentChooser()) {
 						this.drawHand();
 					}
 				} else if (this.phase === 'pick') {
-					this.$.board.cardsHidden = true;
-					this.$.board.clickable = false;
-					this.$.hand.clickable = !this.isCurrentChooser();
+					this.$$('game-board').cardsHidden = true;
+					this.$$('game-board').clickable = false;
+					this.$$('custom-hand').clickable = !this.isCurrentChooser();
 				}
 			},
 			isCurrentChooser: function() {
