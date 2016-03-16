@@ -213,7 +213,7 @@
 							_this.push('user_data.cards', card);
 							firebase_query.child('deckWhite').set(deck)
 							.then(function() {
-								return lock.set(false)
+								return lock.set(false);
 							})
 							.then(function() {
 								_this.drawing = false;
