@@ -9,14 +9,14 @@
 			location$="{{url}}"
 			data="{{game_data}}"></firebase-document>
 
-		<paper-dialog id="prompt">
+		<paper-dialog id="prompt" no-cancel-on-outside-click=true>
 			<h1>Welcome to {{game_data.name}}!</h1>
 			<form is="iron-form" on-iron-form-submit="newUser">
 				<paper-input label="What is your name?" value="{{name::input}}">
 				</paper-input>
 			</form>
 		</paper-dialog>
-		<paper-dialog id="start">
+		<paper-dialog id="start" no-cancel-on-outside-click=true>
 			<paper-button on-tap="startGame">Start Game</paper-button>
 		</paper-dialog>
 	</template>
