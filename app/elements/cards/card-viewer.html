@@ -24,7 +24,7 @@
 
 		iron-list {
 			@apply(--layout-fit);
-			margin-top: 6em;
+			margin-top: 10em;
 			width: 50%;
 			float: left;
 			display: inline-block;
@@ -45,15 +45,16 @@
 		<div class="list-header">
 			<!-- <paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button> -->
 			<h1>Check out these cards!</h1>
+			<paper-input label="Search for Cards" value={{query::input}}></paper-input>
 		</div>
 		<div class="list-container">
 
-			<iron-list items="{{white-cards}}">
+			<iron-list items="{{filter(white-cards, query)}}">
 				<template>
 					<custom-card card-text="{{item.text}}"></custom-card>
 				</template>
 			</iron-list>
-			<iron-list items="{{black-cards}}">
+			<iron-list items="{{filter(black-cards, query)}}">
 				<template>
 					<custom-card black card-text="{{item.text}}"></custom-card>
 				</template>
@@ -85,6 +86,10 @@
 					computed: 'getType(black)',
 					observer: 'animate'
 				},
+				query: {
+					type: String,
+					value: ""
+				},
 				animationConfig: {
 					value: function() {
 						return {
@@ -115,6 +120,11 @@
 			},
 			notCount: function(data) {
 				return data.__firebaseKey__ !== 'count' && data.__firebaseKey__ !== "existingCards";
+			},
+			filter: function(data, query) {
+				return data.filter(function(item) {
+					return item && item.text && item.text.match(new RegExp(query,"i"));
+				});
 			}
 		})
 	</script>
