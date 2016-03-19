@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+	<head>
+    	<meta charset="UTF-8">
+    	<base href="/">
+		<title>Play Cards Against Humanity</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script>
+			window.Polymer = window.Polymer || {};
+			window.Polymer.dom = 'shadow';
+		</script>
+		<link rel="import" href="/app/bower_components/polymer/polymer.html" />
+		<link rel="import" href="/app/elements/elements.html" />
+
+		<style>
+			body {
+				margin: 0;
+				height: 100vh;
+			}
+			a {
+				text-decoration: none;
+			}
+			a:visited {
+				text-decoration: none;
+				color: inherit;
+			}
+		</style>
+
+	</head>
+	<body class="fullbleed layout vertical">
+		<app></app>
+
+		<!-- ES6-related imports -->
+		<script src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
+		<script src="/node_modules/es6-shim/es6-shim.min.js"></script>
+		<script src="/node_modules/systemjs/dist/system.js"></script>
+		<script>
+		    //configure system loader
+		    System.config({defaultJSExtensions: true});
+		</script>
+		<script src="/node_modules/rxjs/bundles/Rx.js"></script>
+		<script src="/node_modules/angular2/bundles/angular2.min.js"></script>
+		<script src="node_modules/angular2/bundles/router.dev.js"></script>
+		<script>
+		    //bootstrap the Angular2 application
+		    System.import('dist/app').catch(console.log.bind(console));
+		</script>
+	</body>
+</html>

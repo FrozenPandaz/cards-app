@@ -1,0 +1,15 @@
+<!-- <link rel="import" href="../router.html" /> -->
+<iron-media-query id="mq" query="(max-width: 600px)" query-matches="{{queryMatches}}"></iron-media-query>
+<paper-header-panel>
+	<paper-toolbar>
+			<paper-icon-button icon="menu"></paper-icon-button>
+			<a [routerLink]= "['Home']"><h1>Play Cards Against Humility</h1></a>
+			<!-- <paper-input label="Game" type="text" readonly value$="{{getUrl()}}"></paper-input> -->
+		</paper-toolbar>
+	<paper-drawer-panel responsiveWidth=600>
+		<app-drawer drawer game$="{{gameId}}"></app-drawer>
+		<div main>
+			<router-outlet></router-outlet>
+		</div>
+	</paper-drawer-panel>
+</paper-header-panel>

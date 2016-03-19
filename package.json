@@ -1,27 +1,39 @@
 {
-  "name": "cards-app",
-  "version": "1.0.0",
-  "description": "Cards Against Humanity App written in Polymer",
-  "main": "index.js",
-  "dependencies": {
-    "bower": "^1.7.7",
-    "gulp": "^3.9.1"
-  },
-  "devDependencies": {
-    "gulp-vulcanize": "^6.1.0",
-    "gulp-webserver": "^0.9.1"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/FrozenPandaz/cards-app.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/FrozenPandaz/cards-app/issues"
-  },
-  "homepage": "https://card-app.firebaseapp.com/"
+	"name": "cards-app",
+	"version": "1.0.0",
+	"description": "Cards Against Humanity App written in Polymer",
+	"main": "index.js",
+	"dependencies": {
+		"bower": "^1.7.7",
+		"angular2": "2.0.0-beta.11",
+		"es6-promise": "^3.0.2",
+		"es6-shim": "^0.35.0",
+		"reflect-metadata": "0.1.2",
+		"rxjs": "5.0.0-beta.2",
+		"zone.js": "0.6.4",
+		"systemjs": "0.19.6"
+	},
+	"devDependencies": {
+		"connect": "^3.4.0",
+		"del": "^1.2.0",
+		"gulp": "^3.9.1",
+		"gulp-typescript": "^2.8.0",
+		"gulp-vulcanize": "^6.1.0",
+		"gulp-webserver": "^0.9.1",
+		"open": "0.0.5",
+		"serve-static": "^1.10.0"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/FrozenPandaz/cards-app.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/FrozenPandaz/cards-app/issues"
+	},
+	"homepage": "https://card-app.firebaseapp.com/"
 }
