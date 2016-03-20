@@ -1,7 +1,9 @@
 var gulp = require('gulp'),
 	vulcanize = require('gulp-vulcanize'),
-	webserver = require('gulp-webserver');
+	webserver = require('gulp-webserver'),
+    webpack = require('gulp-webpack');
  
+
 var PATHS = {
     src: 'app/**/*.ts'
 };
@@ -9,6 +11,12 @@ var PATHS = {
 gulp.task('clean', function (done) {
     var del = require('del');
     del(['dist'], done);
+});
+
+gulp.task('webpack', ['ts2js'], function() {
+  return gulp.src('dist/app.js')
+    .pipe(webpack())
+    .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('ts2js', function () {
@@ -38,7 +46,7 @@ gulp.task('play', ['ts2js'], function () {
     });
 });
 
-gulp.task('default', ['webserver']);
+gulp.task('default', ['play']);
 
 gulp.task('webserver', ['ts2js'], function() {
   gulp.src('')

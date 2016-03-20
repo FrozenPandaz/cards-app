@@ -5,11 +5,11 @@ import {Home, Creator} from './home/home.component';
 import {Viewer} from './viewer/viewer.component';
 
 @Component({
-    selector: 'app',
-    templateUrl: 'app/app.html',
-    directives: [...ROUTER_DIRECTIVES],
-    providers: [ROUTER_PROVIDERS],
-    styles: [`
+	selector: 'app',
+	templateUrl: 'app/app.html',
+	directives: [...ROUTER_DIRECTIVES],
+	providers: [ROUTER_PROVIDERS],
+	styles: [`
 		paper-drawer-panel {
 			--paper-drawer-panel-drawer-container: {
 				background-color: beige;
@@ -37,7 +37,7 @@ import {Viewer} from './viewer/viewer.component';
 				display: inherit;
 			}
 		}
-    `]
+	`]
 })
 
 @RouteConfig([
@@ -46,15 +46,15 @@ import {Viewer} from './viewer/viewer.component';
 		name: 'Viewer',
 		component: Viewer
 	},
-	// {
-	// 	path: '/card-creator/',
-	// 	name: 'Creator',
-	// 	component: Creator
-	// }, //, {
+	{
+		path: '/creator',
+		name: 'Creator',
+		component: Creator
+	},
 	{
 		path: '/',
 		name: 'Home',
-		component: Creator
+		component: Home
 	},
 	// {
 	// 	path: '/:game_id',
