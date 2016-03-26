@@ -1,0 +1,33 @@
+<dom-module is="card-editor">
+	<template>
+		<paper-input auto-validate pattern={{pattern}} error-message={{error}} name="text" type="text" label="Card Text" value="{{cardText::input}}"></paper-input>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'card-editor',
+			properties: {
+				cardId: String,
+				cardType: Boolean,
+				cardText: {
+					type: String,
+					notify: true
+				},
+				pattern: {
+					type: String,
+					computed: 'getPattern(cardType)'
+				},
+				error: {
+					type: String,
+					computed: 'getError(type)'
+				}
+			},
+			getPattern: function(black) {
+				return black ? '([^_]*_[^_]*){1,2}' : '^((?!_).)*$';
+			},
+			getError: function(black) {
+				return black ? 'Black Cards must contain 1 or 2 fields("_")' : 'White Cards must not contain any "_"';
+			}
+		});
+	</script>
+</dom-module>

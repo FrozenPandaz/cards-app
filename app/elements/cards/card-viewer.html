@@ -36,12 +36,14 @@
 		
 	</style>
 	<template>
-		<firebase-collection
+		<!-- <firebase-collection
 			location="https://card-app.firebaseio.com/cards/white"
-			data="{{white-cards}}"></firebase-collection>
+			data="{{white-cards}}"
+			id="whiteLibrary"></firebase-collection> -->
 		<firebase-collection
 			location="https://card-app.firebaseio.com/cards/black"
-			data="{{black-cards}}"></firebase-collection>
+			data="{{black-cards}}"
+			id="blackLibrary"></firebase-collection>
 		<div class="list-header">
 			<!-- <paper-toggle-button id="black" name="black" active="{{black}}"></paper-toggle-button> -->
 			<h1>Check out these cards!</h1>
@@ -51,14 +53,17 @@
 
 			<iron-list items="{{filter(white-cards, query)}}">
 				<template>
-					<custom-card card-text="{{item.text}}"></custom-card>
+					<custom-card card-text="{{item.text}}" on-tap="edit"></custom-card>
 				</template>
 			</iron-list>
 			<iron-list items="{{filter(black-cards, query)}}">
 				<template>
-					<custom-card black card-text="{{item.text}}"></custom-card>
+					<custom-card black card-text="{{item.text}}" on-tap="edit"></custom-card>
 				</template>
 			</iron-list>
+			<paper-dialog>
+				<card-editor card-text="{{cardText}}" card-id="{{cardId}}" card-type="{{cardType}}"></card-editor>
+			</paper-dialog>
 			<!-- <iron-pages selected="{{type}}" attr-for-selected="id">
 				<span id="white">
 					<template is="dom-repeat" items="{{white-cards}}" filter=notCount initialCount=20 targetFramerate=60>
@@ -81,6 +86,20 @@
 			properties: {
 				black: Boolean,
 				cardId: String,
+				cardText: {
+					type: String,
+					observer: "onEdit"
+				},
+				"white-cards": {
+					type: Array,
+					value: [
+						{
+							id: "card_0",
+							text: "Mock Card Text",
+							black: false
+						}
+					]
+				},
 				type: {
 					type:String,
 					computed: 'getType(black)',
@@ -110,6 +129,21 @@
 						}
 					}
 				}
+			},
+			edit: function(event) {
+				console.log('editing', event.model.item.id);
+				this.cardId = event.model.item.id;
+				this.cardType = event.model.item.black;
+				this.cardText = event.model.item.text;
+				this.$$('paper-dialog').open();
+			},
+			onEdit: function(text) {
+				if (!this.$[this.cardType ? 'blackLibrary' : 'whiteLibrary']) {
+					this['white-cards'][0].text = text;
+					this.set('white-cards', this['white-cards']);
+					return;
+				}
+				this.$[this.cardType ? 'blackLibrary' : 'whiteLibrary'].query.child(this.cardId + '/text').set(text);
 			},
 			animate: function(type) {
 				this.playAnimation(type);
