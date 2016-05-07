@@ -138,7 +138,7 @@
 				this.$$('paper-dialog').open();
 			},
 			onEdit: function(text) {
-				if (!this.$[this.cardType ? 'blackLibrary' : 'whiteLibrary']) {
+`				if (!this.$[this.cardType ? 'blackLibrary' : 'whiteLibrary']) {
 					this['white-cards'][0].text = text;
 					this.set('white-cards', this['white-cards']);
 					return;
