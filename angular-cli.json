@@ -1,0 +1,30 @@
+{
+  "project": {
+    "version": "0.0.1",
+    "name": "cards-app-2"
+  },
+  "apps": [
+    {
+      "main": "src/main.ts",
+      "tsconfig": "tsconfig.json",
+      "mobile": false
+    }
+  ],
+  "addons": [],
+  "packages": [],
+  "e2e": {
+    "protractor": {
+      "config": "config/protractor.conf.js"
+    }
+  },
+  "test": {
+    "karma": {
+      "config": "config/karma.conf.js"
+    }
+  },
+  "defaults": {
+    "sourceDir": "src",
+    "styleExt": "scss",
+    "prefixInterfaces": false
+  }
+}
