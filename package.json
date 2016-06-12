@@ -43,6 +43,7 @@
     "express": "^4.13.4",
     "firebase": "^2.4.2",
     "html-loader": "^0.4.3",
+    "materialize-css": "^0.97.6",
     "node-sass": "^3.7.0",
     "preboot": "^2.1.2",
     "rxjs": "5.0.0-beta.6",

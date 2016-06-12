@@ -3,14 +3,14 @@ import {RouteConfig, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
 import {FIREBASE_PROVIDERS} from 'angularfire2';
 
-import {HeaderComponent} from './header';
+import {NavComponent} from './nav';
 import {HomeComponent} from './home';
 import {SidebarComponent} from './sidebar';
 @Component({
 	selector: 'app', // <app></app>
 	directives: [
 		...ROUTER_DIRECTIVES,
-		HeaderComponent,
+		NavComponent,
 		SidebarComponent
 	],
 	providers: [
