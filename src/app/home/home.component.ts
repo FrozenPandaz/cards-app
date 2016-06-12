@@ -13,15 +13,6 @@ export class HomeComponent implements OnInit {
 	constructor(private angularfire: AngularFire) {}
 
 	ngOnInit() {
-		this.games = <FirebaseListObservable<any[]>> this.angularfire.database.list('/games', {
-			query: {
-				orderByChild: 'created',
-				limitToLast: 10
-			}
-		})
-		.map(games => {
-			return games.reverse();
-		});
 	}
 
 }

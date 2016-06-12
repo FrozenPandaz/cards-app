@@ -5,18 +5,22 @@ import {FIREBASE_PROVIDERS} from 'angularfire2';
 
 import {HeaderComponent} from './header';
 import {HomeComponent} from './home';
-
+import {SidebarComponent} from './sidebar';
 @Component({
 	selector: 'app', // <app></app>
 	directives: [
 		...ROUTER_DIRECTIVES,
-		HeaderComponent
+		HeaderComponent,
+		SidebarComponent
 	],
 	providers: [
 		FIREBASE_PROVIDERS
 	],
 	encapsulation: ViewEncapsulation.None,
-	styles: [require('./app.component.scss')],
+	styles: [
+		require('./app.component.scss'),
+		require('../../node_modules/materialize-css/sass/materialize.scss')
+	],
 	template: require('./app.component.html')
 })
 @RouteConfig([
