@@ -1,4 +1,11 @@
 :host {
-	padding: 20px;
 	display: block;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+
+.game-info {
+	float: left;
+	padding: 20px;
 }

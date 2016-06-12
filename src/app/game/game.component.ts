@@ -3,11 +3,13 @@ import {RouteParams} from '@angular/router-deprecated';
 import {AngularFire, FirebaseListObservable} from 'angularfire2';
 
 import {CardComponent} from '../card';
+import {HandComponent} from '../hand';
+import {BoardComponent} from '../board';
 
 @Component({
 	moduleId: module.id,
 	selector: 'game',
-	directives: [CardComponent],
+	directives: [CardComponent, HandComponent, BoardComponent],
 	template: require('./game.component.html'),
 	styles: [require('./game.component.scss')]
 })
