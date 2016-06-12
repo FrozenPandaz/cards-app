@@ -9,7 +9,9 @@ var commonConfig = {
     loaders: [
       // TypeScript
       { test: /\.ts$/, loader: 'ts-loader' },
-      { test: /\.json$/, loader: 'raw-loader' }
+      { test: /\.json$/, loader: 'raw-loader' },
+	  { test: /\.scss$/, loaders: ['raw-loader', 'sass-loader'] },
+	  { test: /\.html$/, loader: 'html-loader' }
     ],
     preLoaders: [
       // needed to lower the filesize of angular due to inline source-maps
