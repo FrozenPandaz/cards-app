@@ -1,5 +1,11 @@
-<h2>
-  {{game_id | uppercase}}!
+<h2 *ngIf="game">
+  {{game.name}} created on {{game.created | date}}!
 </h2>
+<h3>
+	Players
+</h3>
+<ul *ngIf="game">
+	<li *ngFor="let user of users | async">{{user.name}}</li>
+</ul>
 <hand>
 </hand>
