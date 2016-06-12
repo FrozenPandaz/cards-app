@@ -1,6 +1,7 @@
 <h2 *ngIf="game">
   {{game.name}} created on {{game.created | date}}!
 </h2>
+<card *ngIf="game && game.currentBlackCard" class="black" [card]="game.currentBlackCard"></card>
 <h3>
 	Players
 </h3>

@@ -1,0 +1,11 @@
+$card-size: 156px;
+
+:host.black div {
+	background-color: black;
+	color: white;
+}
+
+div {
+	width: $card-size;
+	height: $card-size;
+}

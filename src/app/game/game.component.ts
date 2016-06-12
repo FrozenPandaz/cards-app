@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import {RouteParams} from '@angular/router-deprecated';
 import {AngularFire, FirebaseListObservable} from 'angularfire2';
 
+import {CardComponent} from '../card';
+
 @Component({
 	moduleId: module.id,
 	selector: 'game',
+	directives: [CardComponent],
 	template: require('./game.component.html'),
 	styles: [require('./game.component.scss')]
 })
@@ -13,9 +16,11 @@ export class GameComponent implements OnInit {
 	users: FirebaseListObservable<any[]>;
 
 	constructor(private routeParams: RouteParams, private af: AngularFire) {
+	}
+
+	ngOnInit() {
 		let game_id = this.routeParams.get('gameId');
 		this.af.database.object('/games/' + game_id).map(game => {
-			console.log(game);
 			game.name = game.name || game.$key;
 			return game;
 		}).subscribe(game => {
@@ -32,10 +37,6 @@ export class GameComponent implements OnInit {
 				return user.$key !== 'count';
 			});
 		});
-	}
-
-	ngOnInit() {
-
 	}
 
 }
