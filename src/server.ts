@@ -27,8 +27,7 @@ app.use(express.static(ROOT, {index: false}));
 // Routes with html5pushstate
 import {ngApp} from './main.node';
 app.use('/', ngApp);
-app.use('/about', ngApp);
-app.use('/home', ngApp);
+app.use('/:gameId', ngApp);
 
 // use indexFile over ngApp only when there is too much load on the server
 function indexFile(req, res) {

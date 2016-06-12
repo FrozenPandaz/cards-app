@@ -6,6 +6,7 @@ import {FIREBASE_PROVIDERS} from 'angularfire2';
 import {NavComponent} from './nav';
 import {HomeComponent} from './home';
 import {SidebarComponent} from './sidebar';
+import {GameComponent} from './game';
 @Component({
 	selector: 'app', // <app></app>
 	directives: [
@@ -25,6 +26,7 @@ import {SidebarComponent} from './sidebar';
 })
 @RouteConfig([
 	{ path: '/', component: HomeComponent, name: 'Home', useAsDefault: true },
+	{ path: '/:gameId', component: GameComponent, name: 'Game'},
 	{ path: '/**', redirectTo: ['Home'] }
 ])
 export class App {
