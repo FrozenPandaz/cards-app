@@ -2,11 +2,13 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {RouteConfig, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
 import {FIREBASE_PROVIDERS} from 'angularfire2';
+import {Observable} from 'rxjs/Observable';
 
 import {NavComponent} from './nav';
 import {HomeComponent} from './home';
-import {SidebarComponent} from './sidebar';
+import {SidebarComponent, SidebarService} from './sidebar';
 import {GameComponent} from './game';
+
 @Component({
 	selector: 'app', // <app></app>
 	directives: [
@@ -15,7 +17,8 @@ import {GameComponent} from './game';
 		SidebarComponent
 	],
 	providers: [
-		FIREBASE_PROVIDERS
+		FIREBASE_PROVIDERS,
+		SidebarService
 	],
 	encapsulation: ViewEncapsulation.None,
 	styles: [
@@ -30,8 +33,12 @@ import {GameComponent} from './game';
 	{ path: '/**', redirectTo: ['Home'] }
 ])
 export class App {
+	constructor(private sidebarService: SidebarService) {}
+
+	sidebar_expanded: Observable<boolean>;
 
 	ngOnInit() {
+		this.sidebar_expanded = this.sidebarService.getSidebarState();
 	}
 
 }

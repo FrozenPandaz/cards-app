@@ -1,6 +1,6 @@
-<h4>Ongoing Games</h4>
+<h4 (click)="onClick()">Ongoing Games</h4>
 <ul>
 	<li *ngFor="let game of games | async">
-		<a [routerLink]="['Game', {gameId: game.$key}]">{{game.name || game.$key}}</a>
+		<a [routerLink]="['Game', {gameId: game.$key}]" (click)="onClick()">{{game.name || game.$key}}</a>
 	</li>
 </ul>
