@@ -8,12 +8,20 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 })
 export class HomeComponent implements OnInit {
 
-	games: FirebaseListObservable<any>;
+	games: FirebaseListObservable<any[]>;
 
 	constructor(private angularfire: AngularFire) {}
 
 	ngOnInit() {
-		this.games = this.angularfire.database.list('/games');
+		this.games = <FirebaseListObservable<any[]>> this.angularfire.database.list('/games', {
+			query: {
+				orderByChild: 'created',
+				limitToLast: 10
+			}
+		})
+		.map(games => {
+			return games.reverse();
+		});
 	}
 
 }
