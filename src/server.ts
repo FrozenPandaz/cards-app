@@ -34,10 +34,10 @@ app.use('/home', ngApp);
 function indexFile(req, res) {
   // when there is too much load on the server just send
   // the index.html without prerendering for client-only
-  res.sendFile('/index.html', {root: __dirname});
+	res.sendFile('/index.html', {root: __dirname});
 }
 
 // Server
 app.listen(3000, () => {
-  console.log('Listening on: http://localhost:3000');
+	console.log('Listening on: http://localhost:3000');
 });

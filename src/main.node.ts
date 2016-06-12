@@ -7,6 +7,9 @@ import {
 	NODE_HTTP_PROVIDERS,
 	ExpressEngineConfig
 } from 'angular2-universal';
+import {FIREBASE_PROVIDERS, defaultFirebase} from 'angularfire2';
+
+import 'rxjs';
 
 // Application
 import {App} from './app/app.component';
@@ -27,10 +30,12 @@ export function ngApp(req, res) {
 		{provide: REQUEST_URL, useValue: url},
 		NODE_ROUTER_PROVIDERS,
 		NODE_HTTP_PROVIDERS,
+		FIREBASE_PROVIDERS,
+		defaultFirebase('https://card-app.firebaseio.com')
 	],
-	async: true,
-	preboot: false // { appRoot: 'app' } // your top level app component selector
-  };
+		async: true,
+		preboot: false // { appRoot: 'app' } // your top level app component selector
+	};
 
-  res.render('index', config);
+	res.render('index', config);
 }
