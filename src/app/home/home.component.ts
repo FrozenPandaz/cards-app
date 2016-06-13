@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 @Component({
 	moduleId: module.id,
 	selector: 'home',
@@ -8,9 +7,7 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 })
 export class HomeComponent implements OnInit {
 
-	games: FirebaseListObservable<any[]>;
-
-	constructor(private angularfire: AngularFire) {}
+	constructor() {}
 
 	ngOnInit() {
 	}
