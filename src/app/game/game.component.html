@@ -6,9 +6,9 @@
 <h3>
 	Players
 </h3>
-<ul *ngIf="game">
-	<li *ngFor="let user of users | async">{{user.name}}</li>
+<ul>
+	<li *ngFor="let user of users | async" *ngIf="user">{{user.name}}</li>
 </ul>
 </span>
 <hand class="card-panel"></hand>
-<board class="card-panel"></board>
+<board class="card-panel" [cards]="cards_played"></board>

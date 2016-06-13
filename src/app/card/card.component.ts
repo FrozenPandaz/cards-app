@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import {CardText} from './card-text.pipe';
-
+import {CardService} from './card.service';
 @Component({
 	moduleId: module.id,
 	selector: 'card',
@@ -13,8 +13,14 @@ export class CardComponent implements OnInit {
 	@Input()
 	card: any;
 
-	constructor() {}
+	constructor(private cardService: CardService) {}
 
-	ngOnInit() {}
+	ngOnInit() {
+		if (!this.card.text && this.card.card_id) {
+			this.cardService.getCardById(this.card.card_id).subscribe(card => {
+				this.card = card;
+			});
+		}
+	}
 
 }

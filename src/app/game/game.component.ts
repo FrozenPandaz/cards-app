@@ -15,10 +15,10 @@ import {BoardComponent} from '../board';
 })
 export class GameComponent implements OnInit {
 	game: any;
-	users: FirebaseListObservable<any[]>;
+	users: FirebaseListObservable<any>;
+	cards_played: FirebaseListObservable<any>;
 
-	constructor(private routeParams: RouteParams, private af: AngularFire) {
-	}
+	constructor(private routeParams: RouteParams, private af: AngularFire) {}
 
 	ngOnInit() {
 		let game_id = this.routeParams.get('gameId');
@@ -29,7 +29,7 @@ export class GameComponent implements OnInit {
 			this.game = game;
 		});
 
-		this.users = <FirebaseListObservable<any[]>> this.af.database
+		this.users = <FirebaseListObservable<any>> this.af.database
 		.list('/games/' + game_id + '/users', {
 			query: {
 				orderByChild: 'count'
@@ -39,6 +39,8 @@ export class GameComponent implements OnInit {
 				return user.$key !== 'count';
 			});
 		});
+
+		this.cards_played = this.af.database.list('/games/' + game_id + '/cardsPlayed');
 	}
 
 }

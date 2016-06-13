@@ -1,3 +1,5 @@
-<p>
-  board works!
-</p>
+<ul>
+	<li *ngFor="let card of cards | async">
+		<card [card]="card"></card>
+	</li>
+</ul>

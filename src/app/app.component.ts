@@ -8,6 +8,7 @@ import {NavComponent} from './nav';
 import {HomeComponent} from './home';
 import {SidebarComponent, SidebarService} from './sidebar';
 import {GameComponent} from './game';
+import {CardService} from './card';
 
 @Component({
 	selector: 'app', // <app></app>
@@ -18,7 +19,8 @@ import {GameComponent} from './game';
 	],
 	providers: [
 		FIREBASE_PROVIDERS,
-		SidebarService
+		SidebarService,
+		CardService
 	],
 	encapsulation: ViewEncapsulation.None,
 	styles: [
