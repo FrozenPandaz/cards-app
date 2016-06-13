@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import {RouteParams} from '@angular/router-deprecated';
-import {AngularFire, FirebaseListObservable} from 'angularfire2';
+import {FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2';
 
+import {BoardComponent} from '../board';
 import {CardComponent} from '../card';
 import {HandComponent} from '../hand';
-import {BoardComponent} from '../board';
+import {GameService} from './game.service';
 
 @Component({
 	moduleId: module.id,
 	selector: 'game',
+	providers: [GameService],
 	directives: [CardComponent, HandComponent, BoardComponent],
 	template: require('./game.component.html'),
 	styles: [require('./game.component.scss')]
@@ -17,30 +19,24 @@ export class GameComponent implements OnInit {
 	game: any;
 	users: FirebaseListObservable<any>;
 	cards_played: FirebaseListObservable<any>;
+	game_phase: FirebaseObjectObservable<any>;
 
-	constructor(private routeParams: RouteParams, private af: AngularFire) {}
+	constructor(
+		private routeParams: RouteParams,
+		private gameService: GameService
+	) {}
 
 	ngOnInit() {
-		let game_id = this.routeParams.get('gameId');
-		this.af.database.object('/games/' + game_id).map(game => {
-			game.name = game.name || game.$key;
-			return game;
-		}).subscribe(game => {
+		this.gameService.setGameId(this.routeParams.get('gameId'));
+		this.gameService.getGame().subscribe(game => {
 			this.game = game;
 		});
 
-		this.users = <FirebaseListObservable<any>> this.af.database
-		.list('/games/' + game_id + '/users', {
-			query: {
-				orderByChild: 'count'
-			}
-		}).map(users => {
-			return users.filter(user => {
-				return user.$key !== 'count';
-			});
-		});
+		this.users = this.gameService.getUsers();
 
-		this.cards_played = this.af.database.list('/games/' + game_id + '/cardsPlayed');
+		this.game_phase = this.gameService.getPhase();
+
+		this.cards_played = this.gameService.getCardsPlayed();
 	}
 
 }
