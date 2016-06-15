@@ -13,6 +13,7 @@ import 'rxjs';
 
 // Application
 import {App} from './app/app.component';
+import {NODE_LOCALSTORAGE_PROVIDERS} from './app/shared/local-storage';
 
 export function ngApp(req, res) {
 	let baseUrl = '/';
@@ -31,7 +32,8 @@ export function ngApp(req, res) {
 		NODE_ROUTER_PROVIDERS,
 		NODE_HTTP_PROVIDERS,
 		FIREBASE_PROVIDERS,
-		defaultFirebase('https://card-app.firebaseio.com')
+		defaultFirebase('https://card-app.firebaseio.com'),
+		NODE_LOCALSTORAGE_PROVIDERS
 	],
 		async: true,
 		preboot: false // { appRoot: 'app' } // your top level app component selector

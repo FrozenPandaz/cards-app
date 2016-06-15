@@ -5,9 +5,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class CardText implements PipeTransform {
 
-	transform(value: string, args?: any): string {
+	transform(value: any, args?: any): any {
 		if (!value) {
-			return value;
+			return '';
 		}
 		return value.replace(/_/g, '______');
 	}

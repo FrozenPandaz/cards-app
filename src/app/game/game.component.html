@@ -1,3 +1,14 @@
+<div class="cah-modal" [ngClass]="{visible: modal_visible}">
+	<div class="name-form">
+		<form (submit)="onSubmit($event)">
+			<label>Name</label>
+			<input type="text" [(ngModel)]="name" required>
+
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+</div>
+
 <span class="game-info">
 <h2 *ngIf="game">
   {{game.name}} created on {{game.created | date}}!
@@ -7,7 +18,7 @@
 	Players
 </h3>
 <ul>
-	<li *ngFor="let user of users | async" *ngIf="user">{{user.name}}</li>
+	<li *ngFor="let user of users | async" *ngIf="user && user.name">{{user.name}}</li>
 </ul>
 {{game_phase | async}}
 </span>

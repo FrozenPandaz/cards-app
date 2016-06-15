@@ -17,6 +17,8 @@ import {GameService} from './game.service';
 })
 export class GameComponent implements OnInit {
 	game: any;
+	name: string;
+	modal_visible: boolean = false;
 	users: FirebaseListObservable<any>;
 	cards_played: FirebaseListObservable<any>;
 	game_phase: FirebaseObjectObservable<any>;
@@ -26,13 +28,30 @@ export class GameComponent implements OnInit {
 		private gameService: GameService
 	) {}
 
+	showModal() {
+		this.modal_visible = true;
+	}
+
+	hideModal() {
+		this.modal_visible = false;
+	}
+
+	onSubmit(e) {
+		e.preventDefault();
+		this.hideModal();
+		this.gameService.joinGame(this.name);
+	}
+
 	ngOnInit() {
+		if (!this.gameService.isInGame()) {
+			this.showModal();
+		}
 		this.gameService.setGameId(this.routeParams.get('gameId'));
 		this.gameService.getGame().subscribe(game => {
 			this.game = game;
 		});
 
-		this.users = this.gameService.getUsers();
+		this.users = this.gameService.getUsersByScore();
 
 		this.game_phase = this.gameService.getPhase();
 

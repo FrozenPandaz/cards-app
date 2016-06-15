@@ -1,16 +1,16 @@
 import {
-  it,
-  describe,
-  expect,
-  inject,
-  beforeEachProviders
+	it,
+	describe,
+	expect,
+	inject,
+	beforeEachProviders
 } from '@angular/core/testing';
 import { CardText } from './card-text.pipe';
 
 describe('CardText Pipe', () => {
-  beforeEachProviders(() => [CardText]);
+	beforeEachProviders(() => [CardText]);
 
-  it('should transform the input', inject([CardText], (pipe: CardText) => {
-      expect(pipe.transform(true)).toBe(null);
-  }));
+	it('should transform the input', inject([CardText], (pipe: CardText) => {
+		expect(pipe.transform(true)).toBe(null);
+	}));
 });

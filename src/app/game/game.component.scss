@@ -1,4 +1,4 @@
-:host {
+:host, .cah-modal {
 	display: block;
 	position: absolute;
 	height: 100%;
@@ -8,4 +8,46 @@
 .game-info {
 	float: left;
 	padding: 20px;
+}
+
+.cah-modal {
+	display: none;
+	z-index: 1;
+	background-color: black;
+	opacity: .5;
+}
+
+.visible {
+	display: block;
+}
+
+.name-form {
+	width: 25%;
+	height: 25%;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 1;
+	opacity: 1;
+	padding: 20px;
+	background-color: #B3E5FC;
+	border-radius: 20px;
+	text-align: middle;
+	transform: translate3d(-50%, -50%, 0);
+}
+
+label {
+	color: black;
+}
+
+input {
+	width: 80%;
+	background-color: white;
+	color: black;
+	padding: 0 10px;
+}
+
+button {
+	margin-left: 50%;
+	transform: translateX(-50%);
 }
