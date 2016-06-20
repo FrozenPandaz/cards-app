@@ -4,6 +4,7 @@ import { isNode } from 'angular2-universal';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 
 import { LocalStorage } from '../shared/local-storage/local-storage.service';
+import { Game } from './game.model';
 
 @Injectable()
 export class GameService {
@@ -15,7 +16,7 @@ export class GameService {
 	}
 
 	getGame() {
-		return this.af.database.object('/games/' + this.game_id).map(game => {
+		return this.af.database.object('/games/' + this.game_id).map((game: Game) => {
 			if (!game) {
 				console.log('Game does not exist');
 				return;
@@ -25,13 +26,48 @@ export class GameService {
 		});
 	}
 
+	createGame(name?: string) {
+		if (!name) {
+			var subs = this.getGames({
+				orderByKey: true
+			}).map((games: Game[]) => {
+				return games.filter((game: Game) => {
+					return game.game_id.startsWith('game_');
+				});
+			}).subscribe((games: Game[]) => {
+				subs.unsubscribe();
+				var maxNumber = 0;
+				games.forEach((game: Game) => {
+					let game_number = parseInt(game.game_id.replace('game_', ''));
+					maxNumber = game_number > maxNumber ? game_number : maxNumber;
+				});
+				var new_id = 'game_' + (maxNumber + 1);
+				this.getGames().update(new_id, {
+					name: new_id
+				});
+			});
+		} else {
+			let new_id = name.replace(' ', '-');
+			this.getGames().update(new_id, {
+				name: name
+			});
+		}
+	}
+
+	getGames(query?: any) {
+		return this.af.database.list('/games', {
+			query: query
+		});
+	}
+
 	joinGame(name: string) {
 		let new_user: any = {
 			name: name,
 			score: 0
 		};
-		let key = this.getUsers().push(new_user).key();
-		this.localStorage.setItem(this.game_id, key);
+		this.getUsers().push(new_user).then(value => {
+			this.localStorage.setItem(this.game_id, value.key);
+		});
 	}
 
 	getUsersByScore() {

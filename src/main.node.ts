@@ -14,27 +14,28 @@ import 'rxjs';
 // Application
 import {App} from './app/app.component';
 import {NODE_LOCALSTORAGE_PROVIDERS} from './app/shared/local-storage';
+import {CardsFirebaseConfig} from './cards-firebase.config';
 
 export function ngApp(req, res) {
 	let baseUrl = '/';
 	let url = req.originalUrl || '/';
 
 	let config: ExpressEngineConfig = {
-	directives: [
-		App
-	],
-	platformProviders: [
-		{provide: ORIGIN_URL, useValue: 'http://localhost:3000'},
-		{provide: BASE_URL, useValue: baseUrl},
-	],
-	providers: [
-		{provide: REQUEST_URL, useValue: url},
-		NODE_ROUTER_PROVIDERS,
-		NODE_HTTP_PROVIDERS,
-		FIREBASE_PROVIDERS,
-		defaultFirebase('https://card-app.firebaseio.com'),
-		NODE_LOCALSTORAGE_PROVIDERS
-	],
+		directives: [
+			App
+		],
+		platformProviders: [
+			{provide: ORIGIN_URL, useValue: 'http://localhost:3000'},
+			{provide: BASE_URL, useValue: baseUrl},
+		],
+		providers: [
+			{provide: REQUEST_URL, useValue: url},
+			NODE_ROUTER_PROVIDERS,
+			NODE_HTTP_PROVIDERS,
+			FIREBASE_PROVIDERS,
+			defaultFirebase(CardsFirebaseConfig),
+			NODE_LOCALSTORAGE_PROVIDERS
+		],
 		async: true,
 		preboot: false // { appRoot: 'app' } // your top level app component selector
 	};

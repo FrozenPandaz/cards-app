@@ -43,10 +43,10 @@ export class GameComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		this.gameService.setGameId(this.routeParams.get('gameId'));
 		if (!this.gameService.isInGame()) {
 			this.showModal();
 		}
-		this.gameService.setGameId(this.routeParams.get('gameId'));
 		this.gameService.getGame().subscribe(game => {
 			this.game = game;
 		});

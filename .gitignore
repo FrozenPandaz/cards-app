@@ -27,3 +27,5 @@ testem.log
 #System Files
 .DS_Store
 Thumbs.db
+
+src/cards-firebase.config.ts

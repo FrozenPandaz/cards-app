@@ -1,7 +1,6 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {RouteConfig, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
 
-import {FIREBASE_PROVIDERS} from 'angularfire2';
 import {Observable} from 'rxjs/Observable';
 
 import {NavComponent} from './nav';
@@ -18,7 +17,6 @@ import {CardService} from './card';
 		SidebarComponent
 	],
 	providers: [
-		FIREBASE_PROVIDERS,
 		SidebarService,
 		CardService
 	],

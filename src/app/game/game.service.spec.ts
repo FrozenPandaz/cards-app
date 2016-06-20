@@ -1,17 +1,17 @@
 import {
-  beforeEachProviders,
-  it,
-  describe,
-  expect,
-  inject
+	beforeEachProviders,
+	it,
+	describe,
+	expect,
+	inject
 } from '@angular/core/testing';
 import { GameService } from './game.service';
 
 describe('Game Service', () => {
-  beforeEachProviders(() => [GameService]);
+	beforeEachProviders(() => [GameService]);
 
-  it('should ...',
-      inject([GameService], (service: GameService) => {
-    expect(service).toBeTruthy();
-  }));
+	it('should ...',
+		inject([GameService], (service: GameService) => {
+		expect(service).toBeTruthy();
+	}));
 });

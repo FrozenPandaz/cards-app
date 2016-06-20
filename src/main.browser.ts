@@ -11,6 +11,7 @@ import 'rxjs';
 
 import {FIREBASE_PROVIDERS, defaultFirebase} from 'angularfire2';
 import {App} from './app/app.component';
+import {CardsFirebaseConfig} from './cards-firebase.config';
 import {BROWSER_LOCALSTORAGE_PROVIDERS} from './app/shared/local-storage';
 
 enableProdMode();
@@ -21,6 +22,6 @@ bootstrap(App, [
 	...BROWSER_ROUTER_PROVIDERS,
 	...BROWSER_HTTP_PROVIDERS,
 	...FIREBASE_PROVIDERS,
-	defaultFirebase('https://card-app.firebaseio.com'),
+	defaultFirebase(CardsFirebaseConfig),
 	...BROWSER_LOCALSTORAGE_PROVIDERS
 ]);
