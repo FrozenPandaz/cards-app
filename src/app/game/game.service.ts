@@ -43,13 +43,15 @@ export class GameService {
 				});
 				var new_id = 'game_' + (maxNumber + 1);
 				this.getGames().update(new_id, {
-					name: new_id
+					name: new_id,
+					created: (new Date()).getTime()
 				});
 			});
 		} else {
 			let new_id = name.replace(' ', '-');
 			this.getGames().update(new_id, {
-				name: name
+				name: name,
+				created: (new Date()).getTime()
 			});
 		}
 	}
