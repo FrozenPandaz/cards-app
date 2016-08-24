@@ -10,11 +10,8 @@ import {GameService} from './game.service';
 @Component({
 	moduleId: module.id,
 	selector: 'game',
-	directives: [
-		CardComponent,
-		HandComponent,
-		BoardComponent
-	],
+	providers: [GameService],
+	directives: [CardComponent, HandComponent, BoardComponent],
 	template: require('./game.component.html'),
 	styles: [require('./game.component.scss')]
 })
