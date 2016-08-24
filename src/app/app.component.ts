@@ -7,6 +7,7 @@ import {NavComponent} from './nav';
 import {HomeComponent} from './home';
 import {SidebarComponent, SidebarService} from './sidebar';
 import {GameComponent} from './game';
+import {GameService} from './game/game.service';
 import {CardService} from './card';
 
 @Component({
@@ -18,7 +19,8 @@ import {CardService} from './card';
 	],
 	providers: [
 		SidebarService,
-		CardService
+		CardService,
+		GameService
 	],
 	encapsulation: ViewEncapsulation.None,
 	styles: [
