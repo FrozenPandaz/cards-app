@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { isNode } from 'angular2-universal';
+
+import { Observable } from 'rxjs/Observable';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 
 import { LocalStorage } from '../shared/local-storage/local-storage.service';
@@ -67,7 +69,7 @@ export class GameService {
 			name: name,
 			score: 0
 		};
-		this.getUsers().push(new_user).then(value => {
+		return this.getUsers().push(new_user).then(value => {
 			this.localStorage.setItem(this.game_id, value.key);
 		});
 	}
@@ -101,6 +103,7 @@ export class GameService {
 			orderByKey: true,
 			equalTo: this.localStorage.getItem(this.game_id)
 		}).map(users => {
+			console.log(users);
 			return users[0];
 		});
 	}

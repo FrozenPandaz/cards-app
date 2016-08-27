@@ -1,12 +1,13 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {RouteConfig, ROUTER_DIRECTIVES} from '@angular/router-deprecated';
+import {isNode} from 'angular2-universal';
 
 import {Observable} from 'rxjs/Observable';
 
 import {NavComponent} from './nav';
 import {HomeComponent} from './home';
 import {SidebarComponent, SidebarService} from './sidebar';
-import {GameComponent} from './game';
+import {GameComponent, GameService} from './game';
 import {CardService} from './card';
 
 @Component({
@@ -18,7 +19,8 @@ import {CardService} from './card';
 	],
 	providers: [
 		SidebarService,
-		CardService
+		CardService,
+		GameService
 	],
 	encapsulation: ViewEncapsulation.None,
 	styles: [
@@ -34,6 +36,8 @@ import {CardService} from './card';
 ])
 export class App {
 	constructor(private sidebarService: SidebarService) {}
+
+	isNode: boolean = isNode;
 
 	sidebar_expanded: Observable<boolean>;
 

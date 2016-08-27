@@ -1,7 +1,5 @@
-<sidebar [ngClass]="{expanded: sidebar_expanded | async}">
-</sidebar>
-<nav>
-</nav>
+<sidebar [ngClass]="{expanded: sidebar_expanded | async}"></sidebar>
+<nav></nav>
 <div class="main">
-	<router-outlet></router-outlet>
+	<router-outlet *ngIf="!isNode"></router-outlet>
 </div>

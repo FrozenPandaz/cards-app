@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {RouteParams} from '@angular/router-deprecated';
+
+import {Observable} from 'rxjs/Observable';
 import {FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2';
 
 import {BoardComponent} from '../board';
@@ -19,6 +21,7 @@ export class GameComponent implements OnInit {
 	game: any;
 	name: string;
 	modal_visible: boolean = false;
+	current_user: Observable<any>;
 	users: FirebaseListObservable<any>;
 	cards_played: FirebaseListObservable<any>;
 	game_phase: FirebaseObjectObservable<any>;
@@ -39,7 +42,9 @@ export class GameComponent implements OnInit {
 	onSubmit(e) {
 		e.preventDefault();
 		this.hideModal();
-		this.gameService.joinGame(this.name);
+		this.gameService.joinGame(this.name).then(() => {
+			this.current_user = this.gameService.getCurrentUser();
+		});
 	}
 
 	ngOnInit() {
@@ -51,7 +56,11 @@ export class GameComponent implements OnInit {
 			this.game = game;
 		});
 
-		this.users = this.gameService.getUsersByScore();
+		this.gameService.getUsersByScore().subscribe(users => {
+			this.users = users;
+
+			this.current_user = this.gameService.getCurrentUser();
+		});
 
 		this.game_phase = this.gameService.getPhase();
 

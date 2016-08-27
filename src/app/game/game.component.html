@@ -1,26 +1,28 @@
 <div class="cah-modal" [ngClass]="{visible: modal_visible}">
-	<div class="name-form">
-		<form (submit)="onSubmit($event)">
-			<label>Name</label>
-			<input type="text" [(ngModel)]="name" required>
+	<form class="name-form" (submit)="onSubmit($event)">
+		<label>Name</label>
+		<input type="text" [(ngModel)]="name" required>
 
-			<button type="submit">Submit</button>
-		</form>
-	</div>
+		<button type="submit">Submit</button>
+	</form>
 </div>
 
 <span class="game-info">
-<h2 *ngIf="game">
-  {{game.name}} created on {{game.created | date}}!
-</h2>
-<card *ngIf="game && game.currentBlackCard" class="black" [card]="game.currentBlackCard"></card>
-<h3>
-	Players
-</h3>
-<ul>
-	<li *ngFor="let user of users | async" *ngIf="user && user.name">{{user.name}}</li>
-</ul>
-{{game_phase | async}}
+	<h2 *ngIf="game">
+	{{game.name}} created on {{game.created | date}}!
+	</h2>
+
+	<card *ngIf="game && game.currentBlackCard" class="black" [card]="game.currentBlackCard"></card>
+
+	<h3>
+		Players
+	</h3>
+
+	<ul>
+		<li *ngFor="let user of users" [class.current-user]="user.$key && (current_user | async) && user.$key === (current_user | async).$key">{{user.name}}: {{user.score}}</li>
+	</ul>
+
+	{{game_phase | async}}
 </span>
-<!--<hand class="card-panel"></hand>-->
-<!--<board class="card-panel" [cards]="cards_played | async"></board>-->
+<hand class="card-panel"></hand>
+<board class="card-panel" [cards]="cards_played | async"></board>
